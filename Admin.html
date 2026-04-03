@@ -18,4 +18,48 @@
             <p class="text-xs">[ LOCKED: PHASE 3 ]</p>
         </div>
     </div>
-</section>
+</section><div id="mission-status" style="padding: 20px; background: #1a1a1a; color: #00ffcc; border: 1px solid #333; margin-top: 20px; font-family: monospace;">
+    <h3>Step 1: The Legend of the Seven Stars</h3>
+    <p id="story-text">Loading the ancient blueprints...</p>
+    
+    <hr style="border-color: #333;">
+    
+    <h4>Global Scholarship Progress</h4>
+    <div style="background: #333; width: 100%; height: 20px; border-radius: 10px;">
+        <div id="progress-bar" style="background: #00ffcc; width: 0%; height: 100%; border-radius: 10px; transition: width 1s;"></div>
+    </div>
+    <p>Current Goal: <span id="kit-count">0</span>/1 Chromebook Kits for Students</p>
+    <p id="donor-shoutout" style="font-style: italic; color: #ffcc00;"></p>
+</div>
+
+<script>
+// Logic for Tracking and "Easter Egg" Sensors
+const missionData = {
+    totalDonated: 0, // This will pull from your Master Ledger via API later
+    firstDonorName: "Waiting for Hero...",
+    scholarshipGoal: 50 // $50 for a used Chromebook
+};
+
+function updateMission() {
+    const progress = (missionData.totalDonated / missionData.scholarshipGoal) * 100;
+    document.getElementById('progress-bar').style.width = Math.min(progress, 100) + "%";
+    
+    if (missionData.totalDonated >= 300) {
+        document.getElementById('story-text').innerHTML = "<strong>HIDDEN FEATURE UNLOCKED:</strong> Ozone Sensor Access Granted. Check your email for shipping details.";
+    } else {
+        document.getElementById('story-text').innerText = "The Seven Stars represent the ethics of code. Help a student to unlock the next level.";
+    }
+}
+
+// Milestone Notification Trigger (Simulated for testing)
+function checkMilestone(amount) {
+    if (amount >= 50) {
+        console.log("Milestone Reached: Sending Email to General...");
+        // This triggers your Apps Script function
+    }
+}
+
+updateMission();
+</script>
+
+
