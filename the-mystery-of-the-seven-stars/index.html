@@ -254,7 +254,7 @@
     </style>
 </head>
 <body class="p-4 md:p-10">
-<div id="toast" role="alert" aria-live="polite"></div>
+<div id="toast" role="alert" aria-live="polite" aria-atomic="true"></div>
 
 <div class="max-w-5xl mx-auto">
 
@@ -803,7 +803,10 @@
     window.handleDonation = handleDonation;
 
     // ─── BOOTSTRAP ────────────────────────────────────────────────────────────
-    // Replace 'US' with server-injected region code when using Apps Script
+    // When served via Google Apps Script (Code.gs), replace the 'US' literal
+    // with a template expression: <?= userRegion ?> so the server injects the
+    // viewer's two-letter ISO 3166-1 alpha-2 country code at render time.
+    // Supported merit-locked codes are defined in CONFIG.meritLocked above.
     init('US');
 }());
 </script>
