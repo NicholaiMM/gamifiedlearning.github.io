@@ -167,7 +167,7 @@
                 return () => unsub();
             }, []);
 
-            // ── Battery API ──────────────────────────────────────────────────────
+            // ── Battery API (progressive enhancement – deprecated in some browsers) ──
             useEffect(() => {
                 if (!navigator.getBattery) return;
                 navigator.getBattery().then(bat => {
@@ -295,7 +295,7 @@
                         <div className="flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2">
                             <span className="text-[8px] text-slate-500 uppercase font-black tracking-widest">Mystery_Progress</span>
                             <div className="flex justify-between items-end">
-                                <span className="text-xl font-black text-white">{Math.round((unlockedNodes.length / 5) * 100)}%</span>
+                                <span className="text-xl font-black text-white">{Math.round((unlockedNodes.length / arcadeNodes.length) * 100)}%</span>
                                 <span className="text-[9px] text-blue-500 font-bold mb-1">SYNC</span>
                             </div>
                         </div>
@@ -487,8 +487,9 @@
                     {/* VIEWPORT */}
                     <main className="flex-1 relative flex overflow-hidden w-full">
                         {view === 'overworld'  && <OverworldMap />}
-                        {view === 'terminal'   && <ArcadeTerminal />}
-                        {view === 'arcade'     && <ArcadeTerminal />}
+                        {/* 'arcade' and 'terminal' both render the terminal – 'arcade' is navigated to
+                            from map game-nodes while 'terminal' is used from the nav dock */}
+                        {(view === 'terminal' || view === 'arcade') && <ArcadeTerminal />}
                         {view === 'downloads'  && <DownloadsView />}
                         {view === 'profile'    && <ProfileView />}
                         {view === 'workspace'  && <WorkspaceView />}
