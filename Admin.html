@@ -59,6 +59,35 @@ function checkMilestone(amount) {
     }
 }
 
+// Security Decryption Mini-Game
+var miniGameActive = false;
+var miniGameSteps = [
+    { text: '> INITIATING SECURITY SCAN...', delay: 0 },
+    { text: '> SCANNING NODE VECTOR...', delay: 700 },
+    { text: '> ANOMALY DETECTED: CVE-2024-XXXX', delay: 1400 },
+    { text: '> RUNNING PATCH PROTOCOL...', delay: 2100 },
+    { text: '> VULNERABILITY NEUTRALISED.', delay: 2800 },
+    { text: '> BOUNTY COMPLETE. +50 INTEGRITY PTS', delay: 3500 }
+];
+
+function startMiniGame() {
+    if (miniGameActive) return;
+    miniGameActive = true;
+    var terminal = document.getElementById('game-terminal');
+    var btn = document.getElementById('start-decrypt');
+    if (btn) { btn.disabled = true; btn.innerText = 'RUNNING...'; }
+    if (terminal) { terminal.innerText = ''; }
+    miniGameSteps.forEach(function(step) {
+        setTimeout(function() {
+            if (terminal) { terminal.innerText += step.text + '\n'; }
+            if (step === miniGameSteps[miniGameSteps.length - 1]) {
+                miniGameActive = false;
+                if (btn) { btn.disabled = false; btn.innerText = 'RUN AGAIN'; }
+            }
+        }, step.delay);
+    });
+}
+
 updateMission();
 </script>
 
