@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Mystery of the Seven Stars | Gamified Learning</title>
+    <meta name="description" content="Discover the 7 ethical principles of code. Complete the lesson, pass the examination, and earn your Seven Stars certification.">
+    <meta name="author" content="Gamified Learning">
+    <meta property="og:title" content="The Mystery of the Seven Stars">
+    <meta property="og:description" content="Discover the 7 ethical principles of code. Complete the lesson, pass the examination, and earn your Seven Stars certification.">
+    <meta property="og:url" content="https://gamifiedlearning.org/the-mystery-of-the-seven-stars">
+    <link rel="canonical" href="https://gamifiedlearning.org/the-mystery-of-the-seven-stars">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;700&display=swap');
+
+        :root {
+            --matrix-green: #00ff41;
+            --nexus-blue: #00aaff;
+            --bg-black: #020502;
+            --card-bg: rgba(0, 15, 0, 0.95);
+            --locked-gray: #2a2a2a;
+            --star-gold: #ffd700;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--matrix-green);
+            font-family: 'VT323', monospace;
+            letter-spacing: 0.5px;
+            scroll-behavior: smooth;
+        }
+
+        /* Scanline overlay effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .nexus-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nexus-card:hover:not(.locked) {
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .locked {
+            filter: grayscale(1) brightness(0.5);
+            cursor: not-allowed;
+            border-color: var(--locked-gray) !important;
+            pointer-events: none;
+        }
+
+        .btn-nexus {
+            border: 1px solid var(--matrix-green);
+            padding: 0.5rem 1.5rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+            background: transparent;
+            color: var(--matrix-green);
+        }
+
+        .btn-nexus:hover:not(:disabled) {
+            background: var(--matrix-green);
+            color: black;
+            box-shadow: 0 0 15px var(--matrix-green);
+        }
+
+        .btn-nexus:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Star display */
+        .star-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .star-card {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            padding: 1.25rem;
+            border-radius: 4px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .star-card.revealed {
+            border-color: var(--star-gold);
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+        }
+
+        .star-symbol {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .star-title {
+            color: var(--star-gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .star-body {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: #a0a0a0;
+            line-height: 1.5;
+        }
+
+        /* Quiz styles */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            margin: 0.4rem 0;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            background: transparent;
+            color: var(--matrix-green);
+            cursor: pointer;
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+        }
+
+        .quiz-option:hover:not(:disabled) {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--matrix-green);
+        }
+
+        .quiz-option.correct {
+            background: rgba(0, 255, 65, 0.2);
+            border-color: var(--matrix-green);
+            color: var(--matrix-green);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(255, 51, 0, 0.15);
+            border-color: #ff3300;
+            color: #ff3300;
+        }
+
+        .quiz-option:disabled {
+            cursor: default;
+        }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(4rem);
+            background: var(--card-bg);
+            border: 1px solid var(--matrix-green);
+            color: var(--matrix-green);
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            z-index: 10000;
+            transition: transform 0.4s ease;
+            pointer-events: none;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Cert badge */
+        .cert-badge {
+            display: inline-block;
+            border: 1px solid var(--star-gold);
+            color: var(--star-gold);
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        /* Progress bar */
+        .progress-bar-track {
+            background: #333;
+            width: 100%;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--matrix-green);
+            height: 100%;
+            border-radius: 8px;
+            transition: width 1s ease;
+        }
+
+        /* Easter Egg: Ozone Guardian */
+        #ozone-guardian-tier {
+            display: none;
+            border: 2px solid white;
+            background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            color: white;
+            animation: guardian-pulse 2s infinite;
+        }
+
+        @keyframes guardian-pulse {
+            0%   { box-shadow: 0 0 5px #fff; }
+            50%  { box-shadow: 0 0 25px #fff; }
+            100% { box-shadow: 0 0 5px #fff; }
+        }
+
+        /* Mini-game terminal */
+        #game-terminal {
+            background: #000;
+            color: var(--matrix-green);
+            font-family: 'VT323', monospace;
+            font-size: 0.85rem;
+            padding: 0.75rem;
+            height: 120px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        #game-terminal .line {
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        #game-terminal .line.error { color: #ff3300; }
+        #game-terminal .line.success { color: #00ff41; }
+        #game-terminal .line.warn { color: #ffd700; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .text-6xl { font-size: 2.25rem; }
+            .p-10 { padding: 1rem; }
+            .star-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-10">
+<div id="toast" role="alert" aria-live="polite"></div>
+
+<div class="max-w-5xl mx-auto">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-end border-b border-green-900 pb-6 mb-8">
+        <div>
+            <p class="text-sm text-gray-500 mb-1 font-sans">
+                <a href="/" class="hover:text-green-400 transition">← DEVELOPER NEXUS</a>
+            </p>
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tighter uppercase">
+                The Mystery of<br>the Seven Stars
+            </h1>
+            <p class="text-blue-400 text-lg font-sans mt-2">
+                FOUNDATION PROTOCOL // <span id="node-location">NODE_US</span>
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0 text-left md:text-right font-mono text-sm opacity-70">
+            <p>STATUS: <span id="page-status" class="text-yellow-400">PENDING</span></p>
+            <p>SYSTEM TIME: <span id="utc-clock">--:--:--</span></p>
+        </div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        <!-- Sidebar: Master Ledger -->
+        <aside class="lg:col-span-1 space-y-5">
+            <div class="nexus-card p-5">
+                <h3 class="text-lg border-b border-green-900 mb-4 pb-1">MASTER LEDGER</h3>
+                <ul class="space-y-3 text-sm font-sans uppercase">
+                    <li class="flex justify-between items-center">
+                        <span>7 Stars Cert:</span>
+                        <span id="cert-stars" class="text-red-500">OFFLINE</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Quiz Score:</span>
+                        <span id="quiz-score-display" class="text-gray-500">—</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span>Scholarship:</span>
+                        <span id="scholarship-status" class="text-white">PENDING</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Scholarship Progress -->
+            <div class="nexus-card p-5">
+                <h3 class="text-sm mb-3 border-b border-green-900 pb-1 uppercase">Global Scholarship</h3>
+                <div class="progress-bar-track mb-2">
+                    <div id="scholarship-bar" class="progress-bar-fill" style="width: 0%"></div>
+                </div>
+                <p class="text-xs font-sans text-gray-400">
+                    <span id="kit-count">0</span> / 1 Chromebook Kit
+                </p>
+                <p id="donor-shoutout" class="text-xs mt-2 font-sans" style="color: #ffcc00;"></p>
+            </div>
+
+            <!-- Donation gate (shown for non-merit regions) -->
+            <div id="donation-gate" class="nexus-card p-5 border-blue-500 hidden">
+                <h3 class="text-blue-400 mb-2">MISSION PARTNER</h3>
+                <p class="text-xs font-sans text-gray-400 mb-4">Funding the 2027 Global Sensor Network.</p>
+                <button onclick="handleDonation(300)" class="w-full bg-blue-900 py-2 hover:bg-blue-600 transition text-white text-sm uppercase tracking-wide">
+                    Contribute $300
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="lg:col-span-3 space-y-6">
+
+            <!-- MODULE 01: Seven Stars Lesson -->
+            <section id="module-foundation" class="nexus-card p-6 md:p-8">
+                <h2 class="text-2xl md:text-3xl mb-1">MODULE_01: SEVEN STARS FOUNDATION</h2>
+                <p class="text-sm text-gray-500 uppercase mb-5">Ethics of Code — Read &amp; Complete the Examination</p>
+
+                <!-- Intro -->
+                <div class="font-sans text-gray-300 text-sm leading-relaxed mb-6 space-y-3">
+                    <p>
+                        In the ancient networks, seven stars guided every builder. They are not features—they are
+                        obligations. Every line of code you write carries the weight of these seven principles.
+                        To earn the Seven Stars certification, you must understand and commit to each one.
+                    </p>
+                </div>
+
+                <!-- Star grid (revealed progressively) -->
+                <div id="star-grid" class="star-grid mb-6">
+
+                    <div class="star-card" data-star="1">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 1 — TRANSPARENCY</div>
+                        <p class="star-body">Write code that others can read, understand, and audit. Hidden logic is a liability. Comment your intent, open your repositories, and never obfuscate to deceive.</p>
+                    </div>
+
+                    <div class="star-card" data-star="2">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 2 — RESPONSIBILITY</div>
+                        <p class="star-body">Own every output your code produces. If your system causes harm—directly or indirectly—you bear accountability. Test rigorously. Patch promptly. Never abandon production systems.</p>
+                    </div>
+
+                    <div class="star-card" data-star="3">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 3 — FAIRNESS</div>
+                        <p class="star-body">Build systems that treat all users equitably. Audit for bias in your data and algorithms. Design interfaces that do not exclude based on ability, language, or economic status.</p>
+                    </div>
+
+                    <div class="star-card" data-star="4">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 4 — PRIVACY</div>
+                        <p class="star-body">Collect only what you need. Encrypt what you store. Delete what you no longer require. Users trust you with their most sensitive data — honour that trust above every business metric.</p>
+                    </div>
+
+                    <div class="star-card" data-star="5">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 5 — SECURITY</div>
+                        <p class="star-body">Assume breach. Validate all input. Use least-privilege principles. A single unsanitised field can compromise millions of users. Security is not a feature to add later — it is the foundation.</p>
+                    </div>
+
+                    <div class="star-card" data-star="6">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 6 — SUSTAINABILITY</div>
+                        <p class="star-body">Write code that future engineers can maintain. Prefer readable patterns over clever tricks. Consider the environmental cost of computation. Build systems that outlast their creators.</p>
+                    </div>
+
+                    <div class="star-card" data-star="7">
+                        <div class="star-symbol">★</div>
+                        <div class="star-title">STAR 7 — ACCESSIBILITY</div>
+                        <p class="star-body">The web was built for everyone. Use semantic HTML. Support screen readers. Ensure adequate colour contrast. Every person — regardless of disability — deserves full access to your work.</p>
+                    </div>
+
+                </div>
+
+                <!-- Quiz section (hidden until lesson read) -->
+                <div id="quiz-section" class="hidden">
+                    <h3 class="text-xl border-t border-green-900 pt-4 mb-4">ETHICAL EXAMINATION</h3>
+                    <p class="text-xs font-sans text-gray-500 mb-4">Score 4 / 5 or higher to earn the Seven Stars certification.</p>
+                    <div id="quiz-container"></div>
+                    <div id="quiz-result" class="hidden mt-4 p-4 border border-green-900 font-sans text-sm"></div>
+                    <button id="submit-quiz-btn" onclick="submitQuiz()" class="btn-nexus mt-4 hidden">Submit Answers</button>
+                </div>
+
+                <!-- CTA -->
+                <div id="module-one-cta">
+                    <button id="start-lesson-btn" onclick="startLesson()" class="btn-nexus">
+                        Initialize Foundation
+                    </button>
+                </div>
+            </section>
+
+            <!-- MODULE 02: Architect Sandbox (locked until Module 01 complete) -->
+            <section id="module-sandbox" class="nexus-card p-6 md:p-8 locked" aria-label="Module 02: Architect Sandbox — locked">
+                <h2 class="text-2xl md:text-3xl mb-1 text-blue-400">MODULE_02: ARCHITECT SANDBOX</h2>
+                <p id="sandbox-status-msg" class="text-sm uppercase mb-5 text-gray-500">Requires Module_01 Validation</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Mini-game: Security Decryption -->
+                    <div class="p-4 border border-green-900 bg-black/50">
+                        <h4 class="mb-2 text-white text-lg">SECURITY DECRYPTION</h4>
+                        <div id="game-terminal" aria-live="polite" aria-label="Game terminal output">
+                            <p class="line">// SYSTEM READY...</p>
+                        </div>
+                        <button id="start-decrypt-btn" onclick="startMiniGame()" class="btn-nexus text-xs mt-3">
+                            START BOUNTY
+                        </button>
+                    </div>
+                    <!-- Placeholder: Code Simulation -->
+                    <div class="p-4 border border-gray-800 opacity-50">
+                        <h4 class="mb-2 text-lg">CODE SIMULATION</h4>
+                        <p class="text-xs text-gray-500">[ LOCKED: PHASE 3 ]</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 03: Ozone Guardian (Easter Egg — $300 donation) -->
+            <section id="ozone-guardian-tier" class="p-8 rounded-lg shadow-2xl" aria-hidden="true">
+                <h2 class="text-4xl font-bold mb-2">SYSTEM OVERRIDE: OZONE GUARDIAN</h2>
+                <p class="font-sans text-gray-300">Access Granted to Precision Telemetry and 3-House Movement Masking.</p>
+                <div class="h-48 bg-black mt-6 flex items-center justify-center border border-white opacity-50 font-mono text-sm">
+                    [ MAP DATA STREAMING... ]
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<script>
+(function () {
+    'use strict';
+
+    // ─── CONFIG ──────────────────────────────────────────────────────────────
+    const CONFIG = {
+        meritLocked: ['PH', 'KH', 'LA', 'CN', 'NG', 'KE', 'ZA'],
+        userRegion: 'US',
+        scholarshipGoal: 50,      // $50 per Chromebook kit
+        totalDonated: 0,          // pulled from API in production
+        firstDonorName: 'Waiting for Hero...',
+        quizPassScore: 4
+    };
+
+    const QUIZ_QUESTIONS = [
+        {
+            q: 'Which Seven Stars principle requires that all user data collected must be deleted when no longer needed?',
+            options: ['Transparency', 'Privacy', 'Sustainability', 'Fairness'],
+            answer: 1
+        },
+        {
+            q: 'A developer discovers a bias in their recommendation algorithm that disadvantages low-income users. Which star applies most directly?',
+            options: ['Security', 'Accessibility', 'Fairness', 'Responsibility'],
+            answer: 2
+        },
+        {
+            q: 'You are writing code others will maintain in 5 years. You choose a clear but slightly slower pattern over a clever but unreadable one. Which star guides this choice?',
+            options: ['Transparency', 'Sustainability', 'Privacy', 'Security'],
+            answer: 1
+        },
+        {
+            q: 'Which principle demands that you use semantic HTML and support screen readers?',
+            options: ['Fairness', 'Transparency', 'Accessibility', 'Sustainability'],
+            answer: 2
+        },
+        {
+            q: 'Assume breach, validate all input, and use least-privilege — these practices belong to which star?',
+            options: ['Responsibility', 'Privacy', 'Transparency', 'Security'],
+            answer: 3
+        }
+    ];
+
+    // ─── DOM REFERENCES ───────────────────────────────────────────────────────
+    const sandboxCard     = document.getElementById('module-sandbox');
+    const guardianCard    = document.getElementById('ozone-guardian-tier');
+    const donationGate    = document.getElementById('donation-gate');
+    const certStarsEl     = document.getElementById('cert-stars');
+    const quizSection     = document.getElementById('quiz-section');
+    const quizContainer   = document.getElementById('quiz-container');
+    const quizResult      = document.getElementById('quiz-result');
+    const submitBtn       = document.getElementById('submit-quiz-btn');
+    const moduleOneCta    = document.getElementById('module-one-cta');
+    const startLessonBtn  = document.getElementById('start-lesson-btn');
+    const scholarshipBar  = document.getElementById('scholarship-bar');
+    const kitCountEl      = document.getElementById('kit-count');
+    const donorShoutout   = document.getElementById('donor-shoutout');
+    const pageStatus      = document.getElementById('page-status');
+    const quizScoreEl     = document.getElementById('quiz-score-display');
+
+    let lessonStarted = false;
+    let quizSubmitted = false;
+    let selectedAnswers = {};
+
+    // ─── INIT ─────────────────────────────────────────────────────────────────
+    function init(regionCode) {
+        CONFIG.userRegion = regionCode;
+        document.getElementById('node-location').innerText = 'NODE_' + regionCode;
+        if (!CONFIG.meritLocked.includes(regionCode)) {
+            donationGate.classList.remove('hidden');
+        }
+        updateClock();
+        updateScholarship();
+        restoreProgress();
+    }
+
+    function updateClock() {
+        document.getElementById('utc-clock').innerText =
+            new Date().toUTCString().split(' ')[4];
+        setTimeout(updateClock, 1000);
+    }
+
+    // ─── LESSON ───────────────────────────────────────────────────────────────
+    function startLesson() {
+        if (lessonStarted) return;
+        lessonStarted = true;
+        startLessonBtn.disabled = true;
+        startLessonBtn.innerText = 'LESSON IN PROGRESS...';
+
+        // Animate star cards appearing
+        const cards = document.querySelectorAll('.star-card');
+        cards.forEach(function (card, i) {
+            setTimeout(function () {
+                card.classList.add('revealed');
+                if (i === cards.length - 1) {
+                    // All stars revealed — show quiz
+                    setTimeout(showQuiz, 600);
+                }
+            }, i * 200);
+        });
+    }
+
+    function showQuiz() {
+        quizSection.classList.remove('hidden');
+        moduleOneCta.classList.add('hidden');
+        renderQuiz();
+        quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ─── QUIZ ─────────────────────────────────────────────────────────────────
+    function renderQuiz() {
+        quizContainer.innerHTML = '';
+        QUIZ_QUESTIONS.forEach(function (q, qi) {
+            const block = document.createElement('div');
+            block.className = 'mb-6';
+            block.innerHTML = '<p class="font-sans text-sm text-gray-300 mb-2">' +
+                (qi + 1) + '. ' + escapeHtml(q.q) + '</p>';
+
+            q.options.forEach(function (opt, oi) {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = String.fromCharCode(65 + oi) + '. ' + opt;
+                btn.dataset.question = qi;
+                btn.dataset.option = oi;
+                btn.onclick = function () { selectOption(qi, oi, block); };
+                block.appendChild(btn);
+            });
+
+            quizContainer.appendChild(block);
+        });
+        submitBtn.classList.remove('hidden');
+    }
+
+    function selectOption(questionIndex, optionIndex, block) {
+        if (quizSubmitted) return;
+        selectedAnswers[questionIndex] = optionIndex;
+        const btns = block.querySelectorAll('.quiz-option');
+        btns.forEach(function (b) { b.classList.remove('selected'); });
+        btns[optionIndex].classList.add('selected');
+        btns[optionIndex].style.borderColor = 'var(--nexus-blue)';
+        btns[optionIndex].style.color = 'var(--nexus-blue)';
+    }
+
+    function submitQuiz() {
+        if (quizSubmitted) return;
+        const answered = Object.keys(selectedAnswers).length;
+        if (answered < QUIZ_QUESTIONS.length) {
+            showToast('Answer all ' + QUIZ_QUESTIONS.length + ' questions before submitting.');
+            return;
+        }
+        quizSubmitted = true;
+        submitBtn.disabled = true;
+
+        let score = 0;
+        QUIZ_QUESTIONS.forEach(function (q, qi) {
+            const blocks = quizContainer.querySelectorAll('.mb-6');
+            const block = blocks[qi];
+            const btns = block.querySelectorAll('.quiz-option');
+            btns.forEach(function (b) {
+                b.disabled = true;
+                b.style.borderColor = '';
+                b.style.color = '';
+            });
+            if (selectedAnswers[qi] === q.answer) {
+                btns[q.answer].classList.add('correct');
+                score++;
+            } else {
+                if (selectedAnswers[qi] !== undefined) {
+                    btns[selectedAnswers[qi]].classList.add('incorrect');
+                }
+                btns[q.answer].classList.add('correct');
+            }
+        });
+
+        quizScoreEl.innerText = score + '/' + QUIZ_QUESTIONS.length;
+
+        if (score >= CONFIG.quizPassScore) {
+            onQuizPass(score);
+        } else {
+            onQuizFail(score);
+        }
+    }
+
+    function onQuizPass(score) {
+        quizResult.classList.remove('hidden');
+        quizResult.style.borderColor = 'var(--matrix-green)';
+        quizResult.innerHTML =
+            '<strong style="color:var(--matrix-green)">EXAMINATION PASSED — ' + score + '/' + QUIZ_QUESTIONS.length + '</strong>' +
+            '<br>Seven Stars certification has been recorded. The Architect Sandbox is now unlocked.';
+        completeModuleOne();
+        saveProgress();
+    }
+
+    function onQuizFail(score) {
+        quizResult.classList.remove('hidden');
+        quizResult.style.borderColor = '#ff3300';
+        quizResult.style.color = '#ff3300';
+        quizResult.innerHTML =
+            '<strong>EXAMINATION FAILED — ' + score + '/' + QUIZ_QUESTIONS.length + '</strong>' +
+            '<br>Score ' + CONFIG.quizPassScore + ' or higher to pass. Review the stars and try again.';
+        const retryBtn = document.createElement('button');
+        retryBtn.className = 'btn-nexus mt-3';
+        retryBtn.innerText = 'Retry Examination';
+        retryBtn.onclick = resetQuiz;
+        quizResult.appendChild(retryBtn);
+        showToast('Score too low. Review the Seven Stars and retry.');
+    }
+
+    function resetQuiz() {
+        quizSubmitted = false;
+        selectedAnswers = {};
+        quizResult.classList.add('hidden');
+        submitBtn.disabled = false;
+        renderQuiz();
+    }
+
+    // ─── MODULE PROGRESSION ──────────────────────────────────────────────────
+    function completeModuleOne() {
+        certStarsEl.innerText = 'VERIFIED';
+        certStarsEl.classList.remove('text-red-500');
+        certStarsEl.classList.add('text-green-500');
+        pageStatus.innerText = 'CERTIFIED';
+        pageStatus.classList.remove('text-yellow-400');
+        pageStatus.classList.add('text-green-400');
+
+        // Unlock Module 02
+        sandboxCard.classList.remove('locked');
+        sandboxCard.removeAttribute('aria-label');
+        document.getElementById('sandbox-status-msg').innerText = 'ACCESS GRANTED';
+        document.getElementById('sandbox-status-msg').classList.replace('text-gray-500', 'text-green-500');
+
+        showToast('Seven Stars certification earned! Architect Sandbox unlocked.');
+    }
+
+    // ─── MINI-GAME ────────────────────────────────────────────────────────────
+    let miniGameActive = false;
+    const miniGameSequence = [
+        { text: '> INITIATING SECURITY SCAN...', delay: 0, cls: '' },
+        { text: '> SCANNING NODE VECTOR...', delay: 700, cls: '' },
+        { text: '> ANOMALY DETECTED: CVE-2024-XXXX', delay: 1400, cls: 'warn' },
+        { text: '> RUNNING PATCH PROTOCOL...', delay: 2100, cls: '' },
+        { text: '> APPLYING SALT-HASH LAYER...', delay: 2800, cls: '' },
+        { text: '> VULNERABILITY NEUTRALISED.', delay: 3500, cls: 'success' },
+        { text: '> BOUNTY COMPLETE. +50 INTEGRITY PTS', delay: 4200, cls: 'success' }
+    ];
+
+    function startMiniGame() {
+        if (miniGameActive) return;
+        miniGameActive = true;
+        document.getElementById('start-decrypt-btn').disabled = true;
+        document.getElementById('start-decrypt-btn').innerText = 'RUNNING...';
+
+        const terminal = document.getElementById('game-terminal');
+        terminal.innerHTML = '';
+
+        miniGameSequence.forEach(function (step) {
+            setTimeout(function () {
+                const line = document.createElement('p');
+                line.className = 'line' + (step.cls ? ' ' + step.cls : '');
+                line.innerText = step.text;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+
+                if (step === miniGameSequence[miniGameSequence.length - 1]) {
+                    onMiniGameComplete();
+                }
+            }, step.delay);
+        });
+    }
+
+    function onMiniGameComplete() {
+        miniGameActive = false;
+        const btn = document.getElementById('start-decrypt-btn');
+        btn.disabled = false;
+        btn.innerText = 'RUN AGAIN';
+
+        const certIntegrity = document.getElementById('cert-integrity');
+        if (certIntegrity) {
+            certIntegrity.innerText = 'VERIFIED';
+            certIntegrity.classList.remove('text-red-500');
+            certIntegrity.classList.add('text-green-500');
+        }
+        showToast('Security bounty complete. Integrity verified.');
+    }
+
+    // ─── SCHOLARSHIP ─────────────────────────────────────────────────────────
+    function updateScholarship() {
+        const pct = Math.min((CONFIG.totalDonated / CONFIG.scholarshipGoal) * 100, 100);
+        scholarshipBar.style.width = pct + '%';
+        kitCountEl.innerText = CONFIG.totalDonated >= CONFIG.scholarshipGoal ? '1' : '0';
+        if (CONFIG.firstDonorName !== 'Waiting for Hero...') {
+            donorShoutout.innerText = 'First Hero: ' + CONFIG.firstDonorName;
+        }
+        const scholarshipEl = document.getElementById('scholarship-status');
+        if (scholarshipEl) {
+            scholarshipEl.innerText = CONFIG.totalDonated >= CONFIG.scholarshipGoal ? 'FUNDED' : 'PENDING';
+        }
+        checkMilestone(CONFIG.totalDonated);
+    }
+
+    function checkMilestone(amount) {
+        if (amount >= 50) {
+            console.log('Milestone Reached: Sending notification...');
+        }
+    }
+
+    // ─── EASTER EGG ──────────────────────────────────────────────────────────
+    function handleDonation(amount) {
+        if (amount >= 300) {
+            guardianCard.style.display = 'block';
+            guardianCard.removeAttribute('aria-hidden');
+            document.body.style.backgroundColor = '#000800';
+            showToast('Welcome to the 2027 Guardian Network.');
+        }
+    }
+
+    // ─── PROGRESS PERSISTENCE ────────────────────────────────────────────────
+    function saveProgress() {
+        try {
+            localStorage.setItem('7stars_certified', '1');
+        } catch (e) {
+            // localStorage not available; silently continue
+        }
+    }
+
+    function restoreProgress() {
+        try {
+            if (localStorage.getItem('7stars_certified') === '1') {
+                completeModuleOne();
+                certStarsEl.innerText = 'VERIFIED (CACHED)';
+            }
+        } catch (e) {
+            // localStorage not available; silently continue
+        }
+    }
+
+    // ─── TOAST ───────────────────────────────────────────────────────────────
+    let toastTimer;
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+            toast.classList.remove('show');
+        }, 3500);
+    }
+
+    // ─── UTILS ───────────────────────────────────────────────────────────────
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // ─── EXPOSE GLOBALS for onclick attributes ────────────────────────────────
+    window.startLesson   = startLesson;
+    window.submitQuiz    = submitQuiz;
+    window.startMiniGame = startMiniGame;
+    window.handleDonation = handleDonation;
+
+    // ─── BOOTSTRAP ────────────────────────────────────────────────────────────
+    // Replace 'US' with server-injected region code when using Apps Script
+    init('US');
+}());
+</script>
+</body>
+</html>
