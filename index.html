@@ -2,18 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Gamified Learning v14.0 | Stellara</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Gamified Learning v14.0 | Stellara Educational Gaming Platform</title>
+    
+    <!-- SEO & Meta Tags -->
+    <meta name="description" content="Gamified Learning - An interactive educational gaming platform featuring the Stellara Match-3 puzzle game. Learn through play with gamified experiences.">
+    <meta name="keywords" content="gamified learning, educational games, match-3, puzzle games, stellara, interactive education">
+    <meta name="author" content="Guardian 82">
+    <meta name="theme-color" content="#020617">
+    <meta name="color-scheme" content="dark">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gamifiedlearning.github.io/">
+    <meta property="og:title" content="Gamified Learning v14.0 | Stellara">
+    <meta property="og:description" content="Interactive educational gaming platform with the Stellara Match-3 puzzle game.">
+    <meta property="og:image" content="https://gamifiedlearning.github.io/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gamified Learning v14.0 | Stellara">
+    <meta name="twitter:description" content="Interactive educational gaming platform with the Stellara Match-3 puzzle game.">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Gamified Learning">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='100%25' stop-color='%231e40af'/></linearGradient></defs><path d='M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z' fill='url(%23g)'/><path d='M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z' fill='%23fbbf24'/></svg>">
+    
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
 
     <!-- Firebase Compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-    <!-- React 18 -->
+    <!-- React 18 Production -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
@@ -24,7 +81,49 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background: #020617; }
+        /* Base Styles */
+        * { box-sizing: border-box; }
+        html { -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background: #020617;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Loading State */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .loading-text {
+            margin-top: 20px;
+            color: #3b82f6;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-weight: 900;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
@@ -52,9 +151,47 @@
         }
         .animate-in.fade-in  { animation: nexus-fade-in 0.3s ease-out both; }
         .animate-in.zoom-in  { animation: nexus-zoom-in 0.3s ease-out both; }
+        
+        /* Touch Optimizations */
+        button, a, [role="button"] {
+            touch-action: manipulation;
+        }
+        
+        /* Prevent text selection on game elements */
+        .game-grid {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Performance optimizations */
+        .will-change-transform {
+            will-change: transform;
+        }
+        
+        /* Safe area support for notched devices */
+        @supports (padding: max(0px)) {
+            .safe-bottom {
+                padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+            }
+        }
     </style>
 </head>
 <body class="overflow-hidden">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <svg class="loading-logo" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#3b82f6" />
+                    <stop offset="100%" stop-color="#1e40af" />
+                </linearGradient>
+            </defs>
+            <path d="M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z" fill="url(#loadGrad)" stroke="#60a5fa" stroke-width="2"/>
+            <path d="M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z" fill="#fbbf24"/>
+        </svg>
+        <div class="loading-text">Initializing Stellara...</div>
+    </div>
+    
     <div id="root"></div>
 
     <!-- App-level globals (replace with real Firebase config for production) -->
@@ -69,6 +206,17 @@
         });
         window.__app_id = 'gamified-learning-v14';
         window.__initial_auth_token = null;
+        
+        // Hide loading screen when app is ready
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.classList.add('hidden');
+                    setTimeout(() => loadingScreen.remove(), 500);
+                }
+            }, 800);
+        });
     </script>
 
     <script type="text/babel">
@@ -700,6 +848,39 @@
         // ─── Mount ────────────────────────────────────────────────────────────────
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+        
+        // ─── Error Boundary ───────────────────────────────────────────────────────
+        window.onerror = (msg, url, lineNo, columnNo, error) => {
+            console.error('Application Error:', { msg, url, lineNo, columnNo, error });
+            return false;
+        };
+        
+        window.onunhandledrejection = (event) => {
+            console.error('Unhandled Promise Rejection:', event.reason);
+        };
+    </script>
+    
+    <!-- Service Worker Registration (for PWA) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Service worker can be added for offline support
+                // navigator.serviceWorker.register('/sw.js');
+                console.log('[Gamified Learning] PWA-ready environment detected');
+            });
+        }
+        
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData) {
+                        console.log(`[Gamified Learning] Page load: ${Math.round(perfData.loadEventEnd)}ms`);
+                    }
+                }, 0);
+            });
+        }
     </script>
 </body>
 </html>
