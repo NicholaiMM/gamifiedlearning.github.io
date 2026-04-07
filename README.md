@@ -2,6 +2,8 @@
 
 > 🎮 Mobile-first educational gaming platform featuring the Stellara Match-3 puzzle game
 
+🌐 **Live at [GamifiedLearning.org](https://gamifiedlearning.org)**
+
 ![Version](https://img.shields.io/badge/version-14.0.0-blue)
 ![Status](https://img.shields.io/badge/status-production-green)
 
