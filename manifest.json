@@ -1,0 +1,22 @@
+{
+  "name": "Gamified Learning - Stellara",
+  "short_name": "Gamified",
+  "description": "Interactive educational gaming platform featuring the Stellara Match-3 puzzle game",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["education", "games"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='100%25' stop-color='%231e40af'/></linearGradient></defs><path d='M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z' fill='url(%23g)'/><path d='M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z' fill='%23fbbf24'/></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

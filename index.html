@@ -2,18 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Nexus Arcade v12.9</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Gamified Learning v14.0 | Stellara Educational Gaming Platform</title>
+    
+    <!-- SEO & Meta Tags -->
+    <meta name="description" content="Gamified Learning - An interactive educational gaming platform featuring the Stellara Match-3 puzzle game. Learn through play with gamified experiences.">
+    <meta name="keywords" content="gamified learning, educational games, match-3, puzzle games, stellara, interactive education">
+    <meta name="author" content="Guardian 82">
+    <meta name="theme-color" content="#020617">
+    <meta name="color-scheme" content="dark">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://gamifiedlearning.org/">
+    <meta property="og:title" content="Gamified Learning v14.0 | Stellara">
+    <meta property="og:description" content="Interactive educational gaming platform with the Stellara Match-3 puzzle game.">
+    <meta property="og:image" content="https://gamifiedlearning.org/og-image.png">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Gamified Learning v14.0 | Stellara">
+    <meta name="twitter:description" content="Interactive educational gaming platform with the Stellara Match-3 puzzle game.">
+    <meta name="twitter:image" content="https://gamifiedlearning.org/og-image.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://gamifiedlearning.org/">
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Gamified Learning">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='100%25' stop-color='%231e40af'/></linearGradient></defs><path d='M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z' fill='url(%23g)'/><path d='M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z' fill='%23fbbf24'/></svg>">
+    
+    <!-- Preconnect for Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+    
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
 
     <!-- Firebase Compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-    <!-- React 18 -->
+    <!-- React 18 Production -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
@@ -24,7 +85,49 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background: #020202; }
+        /* Base Styles */
+        * { box-sizing: border-box; }
+        html { -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Inter', system-ui, sans-serif; 
+            background: #020617;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Loading State */
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .loading-text {
+            margin-top: 20px;
+            color: #3b82f6;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-weight: 900;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
@@ -52,9 +155,47 @@
         }
         .animate-in.fade-in  { animation: nexus-fade-in 0.3s ease-out both; }
         .animate-in.zoom-in  { animation: nexus-zoom-in 0.3s ease-out both; }
+        
+        /* Touch Optimizations */
+        button, a, [role="button"] {
+            touch-action: manipulation;
+        }
+        
+        /* Prevent text selection on game elements */
+        .game-grid {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Performance optimizations */
+        .will-change-transform {
+            will-change: transform;
+        }
+        
+        /* Safe area support for notched devices */
+        @supports (padding: max(0px)) {
+            .safe-bottom {
+                padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+            }
+        }
     </style>
 </head>
 <body class="overflow-hidden">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <svg class="loading-logo" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#3b82f6" />
+                    <stop offset="100%" stop-color="#1e40af" />
+                </linearGradient>
+            </defs>
+            <path d="M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z" fill="url(#loadGrad)" stroke="#60a5fa" stroke-width="2"/>
+            <path d="M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z" fill="#fbbf24"/>
+        </svg>
+        <div class="loading-text">Initializing Stellara...</div>
+    </div>
+    
     <div id="root"></div>
 
     <!-- App-level globals (replace with real Firebase config for production) -->
@@ -67,8 +208,19 @@
             messagingSenderId: "000000000000",
             appId: "1:000000000000:web:0000000000000000"
         });
-        window.__app_id = 'nexus-v12-9';
+        window.__app_id = 'gamified-learning-v14';
         window.__initial_auth_token = null;
+        
+        // Hide loading screen when app is ready
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading-screen');
+                if (loadingScreen) {
+                    loadingScreen.classList.add('hidden');
+                    setTimeout(() => loadingScreen.remove(), 500);
+                }
+            }, 800);
+        });
     </script>
 
     <script type="text/babel">
@@ -77,8 +229,8 @@
 
         // ─── Lucide icons ─────────────────────────────────────────────────────────
         const {
-            MapPin, Zap, Rocket, Star, Unlock,
-            BatteryFull, AlertTriangle, CheckCircle2, Download,
+            MapPin, Zap, Rocket, Star, Globe, Gamepad2,
+            BatteryFull, AlertTriangle, CheckCircle2, Download, ShieldCheck,
             Layout, Code2, FileText, User, TerminalSquare,
             Map: MapIcon, Terminal: TermIcon
         } = LucideReact;
@@ -94,21 +246,80 @@
             console.warn('Firebase init skipped:', e.message);
         }
 
-        // ─── SovereignStar ────────────────────────────────────────────────────────
-        const SovereignStar = ({ size = 24, color = "#fbbf24", glow = true, className = "" }) => {
-            const filter = glow ? `drop-shadow(0 0 10px ${color}80)` : 'none';
-            return (
-                <svg
-                    width={size}
-                    height={size}
-                    viewBox="0 0 24 24"
-                    fill={color}
-                    style={{ filter }}
-                    className={className}
-                >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        // ─── NEXUS DATA v14.0 ─────────────────────────────────────────────────────
+        const NEXUS_DATA = {
+            version: "14.0.0",
+            codename: "Gamified_Stellara",
+            identity: {
+                name: "Guardian 82",
+                rank: "Gamified Learning Architect",
+                bio: "Pioneering the intersection of complex technical infrastructure and gamified user experiences. Translating efficiency architecture into high-integrity educational matrices."
+            },
+            devops: [
+                { name: 'Apps Script', url: 'https://script.google.com/', icon: Code2 },
+                { name: 'Google Sites', url: 'https://sites.google.com/', icon: Layout },
+                { name: 'GitHub', url: 'https://github.com/NicholaiMM/gamifiedlearning.github.io', icon: Code2 },
+                { name: 'Master Resume', url: 'https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit', icon: FileText }
+            ]
+        };
+
+        // ─── Gamified Logo Component ──────────────────────────────────────────────
+        const GamifiedLogo = ({ size = 32 }) => (
+            <svg width={size} height={size} viewBox="0 0 100 100" className="drop-shadow-[0_0_10px_#3b82f680]">
+                <defs>
+                    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#3b82f6" />
+                        <stop offset="100%" stopColor="#1e40af" />
+                    </linearGradient>
+                    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="100%" stopColor="#f59e0b" />
+                    </linearGradient>
+                </defs>
+                <path d="M50 5 L90 25 L90 55 C90 75 70 90 50 95 C30 90 10 75 10 55 L10 25 Z" fill="url(#shieldGrad)" stroke="#60a5fa" strokeWidth="2"/>
+                <path d="M50 25 L56 40 L72 42 L60 52 L63 68 L50 60 L37 68 L40 52 L28 42 L44 40 Z" fill="url(#starGrad)"/>
+            </svg>
+        );
+
+        // ─── Tile SVGs for Match-3 Game ───────────────────────────────────────────
+        const TileSVGs = {
+            0: () => ( // Sun
+                <svg viewBox="0 0 24 24" className="w-full h-full text-yellow-500 drop-shadow-[0_0_5px_#eab308]">
+                    <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                    <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
-            );
+            ),
+            1: () => ( // Saturn
+                <svg viewBox="0 0 24 24" className="w-full h-full text-yellow-200 drop-shadow-[0_0_5px_#fef08a]">
+                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-20 12 12)" fill="none" stroke="currentColor" strokeWidth="2"/>
+                    <circle cx="12" cy="12" r="6" fill="currentColor"/>
+                </svg>
+            ),
+            2: () => ( // Sparkles
+                <svg viewBox="0 0 24 24" className="w-full h-full text-amber-200 drop-shadow-[0_0_5px_#fde68a]">
+                    <path d="M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5Z" fill="currentColor"/>
+                    <path d="M5 4L5.5 6.5L8 7L5.5 7.5L5 10L4.5 7.5L2 7L4.5 6.5Z" fill="currentColor"/>
+                </svg>
+            ),
+            3: () => ( // Shield Logo
+                <svg viewBox="0 0 24 24" className="w-full h-full text-blue-500 drop-shadow-[0_0_5px_#3b82f6]">
+                    <path d="M12 2L20 6V12C20 17 16 21 12 22C8 21 4 17 4 12V6L12 2Z" fill="currentColor" opacity="0.8"/>
+                    <path d="M12 7L13.5 10.5L17 11L14 13.5L15 17L12 15L9 17L10 13.5L7 11L10.5 10.5Z" fill="#fbbf24"/>
+                </svg>
+            ),
+            4: () => ( // Galaxy Swirl
+                <svg viewBox="0 0 24 24" className="w-full h-full text-blue-500 drop-shadow-[0_0_5px_#3b82f6]">
+                    <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 1.942-.553 3.754-1.5 5.302l-1.732-1A8 8 0 1 0 12 20c1.782 0 3.425-.583 4.755-1.564l1.155 1.633A9.957 9.957 0 0 1 12 22z" fill="currentColor"/>
+                    <path d="M12 18a6 6 0 1 1 6-6 6.007 6.007 0 0 1-1.302 3.755l-1.562-1.25A4 4 0 1 0 12 16a4.004 4.004 0 0 0 2.502-.876l1.25 1.562A6.005 6.005 0 0 1 12 18z" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                </svg>
+            ),
+            5: () => ( // Comet
+                <svg viewBox="0 0 24 24" className="w-full h-full text-orange-500 drop-shadow-[0_0_5px_#f97316]">
+                    <path d="M18.36 5.64c-1.63-1.63-4.52-1.12-6.57.94l-7.3 7.3c-.93.93-1.2 2.37-.58 3.52.4.76 1.14 1.25 1.97 1.34 2.14.22 4.19-1.26 4.9-3.28l.23-.65 7.3-7.3c2.06-2.05 2.57-4.94.94-6.57z" fill="currentColor"/>
+                    <path d="M3.5 19.5L2 22l2.5-1.5L3.5 19.5z" fill="#fef08a"/>
+                </svg>
+            )
         };
 
         // ─── NavBtn ───────────────────────────────────────────────────────────────
@@ -126,26 +337,27 @@
         const App = () => {
             const [view,            setView]            = useState('overworld');
             const [user,            setUser]            = useState(null);
-            const [points,          setPoints]          = useState(7200);
+            const [points,          setPoints]          = useState(8200);
             const [battery,         setBattery]         = useState(null);
-            const [unlockedNodes,   setUnlockedNodes]   = useState(['tpa_node', 'matrix_node']);
+            const [unlockedNodes,   setUnlockedNodes]   = useState(['tpa_node', 'mnl_gateway', 'match3_node']);
             const [certificates,    setCertificates]    = useState([]);
             const [terminalHistory, setTerminalHistory] = useState([
-                '[ARCADE OS] Terminal initialized.',
-                'Type "help" for commands.'
+                '[GAMIFIED LEARNING] OS v14.0 Linked.',
+                'Brand Assets Verified.',
+                'Type "help" for OS commands.'
             ]);
             const [termInput, setTermInput] = useState('');
 
             const terminalRef = useRef(null);
-            const identity    = "GUARDIAN_82";
+            const identity    = NEXUS_DATA.identity.name;
 
-            // ── Arcade node map ──────────────────────────────────────────────────
+            // ── Arcade node map (Updated for v14.0) ──────────────────────────────
             const arcadeNodes = [
-                { id: 'tpa_node',     name: 'Tampa HQ',     x: '20%', y: '40%', type: 'hub',     icon: MapPin  },
-                { id: 'matrix_node',  name: 'Matrix Match', x: '45%', y: '30%', type: 'game',    icon: Zap     },
-                { id: 'neon_node',    name: 'Neon Leap',    x: '70%', y: '50%', type: 'game',    icon: Rocket  },
-                { id: 'mystery_node', name: 'Seven Stars',  x: '50%', y: '75%', type: 'mystery', icon: Star    },
-                { id: 'future_node',  name: 'Locked Shard', x: '80%', y: '20%', type: 'locked',  icon: Unlock  }
+                { id: 'tpa_node',     name: 'Tampa HQ',     x: '20%', y: '40%', type: 'hub',     icon: MapPin,   color: '#3b82f6' },
+                { id: 'match3_node',  name: 'Stellara Grid',x: '45%', y: '30%', type: 'game',    icon: Gamepad2, color: '#fbbf24' },
+                { id: 'neon_node',    name: 'Neon Leap',    x: '70%', y: '50%', type: 'game',    icon: Rocket,   color: '#0ea5e9' },
+                { id: 'mystery_node', name: 'Seven Stars',  x: '50%', y: '75%', type: 'mystery', icon: Star,     color: '#fbbf24' },
+                { id: 'mnl_gateway',  name: 'Manila B06',   x: '80%', y: '25%', type: 'hub',     icon: Globe,    color: '#8b5cf6' }
             ];
 
             // ── Firebase auth ────────────────────────────────────────────────────
@@ -194,20 +406,23 @@
                 logTerm(clean);
                 switch (clean) {
                     case 'help':
-                        logTerm("Commands: stats, map, unlock, clear, bio, whoami");
+                        logTerm("Cmds: stats, map, bio, clear, brand");
                         break;
                     case 'stats':
-                        logTerm(`Points: ${points} | Nodes: ${unlockedNodes.length} | Battery: ${battery !== null ? battery + '%' : 'N/A'}`);
+                        logTerm(`XP: ${points} | Nodes: ${unlockedNodes.length}`);
                         break;
                     case 'map':
                         setView('overworld');
                         logTerm("Switching to Overworld view...");
                         break;
                     case 'clear':
-                        setTerminalHistory(['[ARCADE OS] Terminal Reset.']);
+                        setTerminalHistory(['[GAMIFIED LEARNING] System Reset.']);
+                        break;
+                    case 'brand':
+                        logTerm("Logos A, B, C logged. Shield identity active.");
                         break;
                     case 'whoami':
-                        logTerm("Guardian 82 // Efficiency Architect // Stellara Candidate");
+                        logTerm("Guardian 82 // Gamified Learning Architect // Stellara Candidate");
                         break;
                     case 'bio':
                         logTerm("Managing technical debt through Stellara-inspired automation.");
@@ -232,43 +447,44 @@
 
             // ── View: Overworld Map ──────────────────────────────────────────────
             const OverworldMap = () => (
-                <div className="flex-1 relative bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4">
+                <div className="flex-1 relative bg-[#020617] overflow-hidden flex flex-col items-center justify-center p-4 animate-in fade-in">
                     {/* Dot-grid background */}
                     <div
                         className="absolute inset-0 opacity-10 pointer-events-none"
                         style={{
                             backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)',
-                            backgroundSize: '40px 40px'
+                            backgroundSize: '30px 30px'
                         }}
                     />
 
                     {/* Map canvas */}
-                    <div className="relative w-full max-w-lg aspect-square bg-blue-900/5 border border-blue-500/20 rounded-[4rem] shadow-[0_0_100px_rgba(30,58,138,0.3)]">
-                        <h2 className="absolute top-8 left-0 right-0 text-center text-blue-400 font-black uppercase text-xs tracking-[0.5em]">
-                            Stellara_Matrix_Map
-                        </h2>
+                    <div className="relative w-full max-w-lg aspect-square glass rounded-[3rem] border border-blue-500/20 flex items-center justify-center overflow-hidden shadow-[0_0_50px_rgba(59,130,246,0.1)]">
+                        <div className="absolute top-8 w-full text-center">
+                            <span className="text-[10px] text-blue-500 font-black uppercase tracking-[0.6em] animate-pulse">Stellara_Overworld_Map</span>
+                        </div>
 
                         {arcadeNodes.map(node => {
-                            const isUnlocked = unlockedNodes.includes(node.id) || node.type === 'hub';
-                            const NodeIcon   = node.icon;
+                            const isUnlocked = unlockedNodes.includes(node.id);
+                            const NodeIcon = node.icon;
                             const handleClick = () => {
                                 if (!isUnlocked) { logTerm("Node is encrypted."); return; }
-                                if (node.type === 'hub')     setView('workspace');
+                                if (node.type === 'hub') setView('workspace');
+                                else if (node.type === 'game') setView('arcade');
                                 else if (node.type === 'mystery') setView('downloads');
-                                else                              setView('terminal');
+                                else setView('terminal');
                             };
                             return (
                                 <div
                                     key={node.id}
-                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 cursor-pointer"
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 cursor-pointer hover:scale-110"
                                     style={{ left: node.x, top: node.y }}
                                     onClick={handleClick}
                                 >
                                     <div className="relative flex flex-col items-center group">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all ${isUnlocked ? 'bg-black border-blue-500 shadow-[0_0_20px_#3b82f640] scale-110' : 'bg-slate-900 border-white/5 opacity-40 scale-90 grayscale'}`}>
-                                            {node.id === 'mystery_node'
-                                                ? <SovereignStar size={24} color={isUnlocked ? "#fbbf24" : "#475569"} />
-                                                : <NodeIcon size={22} className={isUnlocked ? "text-blue-400" : "text-slate-600"} />
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border transition-all ${isUnlocked ? 'bg-black/80 border-blue-500 shadow-[0_0_15px_#3b82f650]' : 'bg-slate-950 border-white/5 opacity-40 grayscale scale-90'}`}>
+                                            {node.id === 'match3_node' 
+                                                ? <Gamepad2 size={24} color="#fbbf24" className={isUnlocked ? "animate-pulse" : ""} />
+                                                : <NodeIcon size={22} color={isUnlocked ? node.color : '#1e293b'} />
                                             }
                                         </div>
                                         <span className={`mt-2 text-[8px] font-black uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded bg-black/80 border border-white/5 ${isUnlocked ? 'text-white' : 'text-slate-700'}`}>
@@ -305,21 +521,21 @@
 
             // ── View: Arcade Terminal ────────────────────────────────────────────
             const ArcadeTerminal = () => (
-                <div className="flex-1 flex flex-col p-4 md:p-8 space-y-4 animate-in fade-in pb-32">
-                    <div className="flex items-center gap-3 mb-2">
-                        <TerminalSquare size={20} className="text-emerald-500" />
-                        <h2 className="text-white font-black uppercase text-sm tracking-[0.2em]">Arcade_Terminal_v1.0</h2>
+                <div className="flex-1 flex flex-col p-6 space-y-4 animate-in fade-in pb-32">
+                    <div className="flex items-center gap-3">
+                        <TerminalSquare size={20} className="text-blue-500" />
+                        <h2 className="text-white font-black text-xs uppercase tracking-widest">OS_Terminal</h2>
                     </div>
-                    <div className="flex-1 bg-black/80 rounded-[2.5rem] border border-white/10 p-6 font-mono text-[11px] flex flex-col shadow-2xl backdrop-blur-xl">
+                    <div className="flex-1 bg-black/90 rounded-[2.5rem] border border-blue-500/20 p-6 font-mono text-[11px] flex flex-col shadow-2xl backdrop-blur-3xl overflow-hidden">
                         <div ref={terminalRef} className="flex-1 overflow-y-auto custom-scroll space-y-1 mb-4 pr-2">
                             {terminalHistory.map((line, i) => (
-                                <div key={i} className={line.startsWith('>') ? 'text-blue-400' : 'text-emerald-500/80 italic'}>
+                                <div key={i} className={line.startsWith('>') ? 'text-blue-400' : 'text-blue-500/70 italic'}>
                                     {line}
                                 </div>
                             ))}
                         </div>
-                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                            <span className="text-blue-500 font-black uppercase">Guardian@Nexus:~$</span>
+                        <div className="flex items-center gap-3 border-t border-white/5 pt-4">
+                            <span className="text-blue-600 font-black">guardian@gamified:~$</span>
                             <input
                                 autoFocus
                                 value={termInput}
@@ -330,18 +546,124 @@
                             />
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={() => runCommand('stats')}
-                            className="p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        >Run_Stats</button>
-                        <button
-                            onClick={() => runCommand('map')}
-                            className="p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        >Open_Map</button>
-                    </div>
                 </div>
             );
+
+            // ── View: Stellara Match-3 Game ──────────────────────────────────────
+            const StellaraGrid = () => {
+                const gridWidth = 8;
+                const [board, setBoard] = useState([]);
+                const [selectedTile, setSelectedTile] = useState(null);
+                const [score, setScore] = useState(0);
+
+                // Initialize random 8x8 board (avoiding initial matches)
+                useEffect(() => {
+                    const generateBoard = () => {
+                        const newBoard = [];
+                        for (let i = 0; i < 64; i++) {
+                            let tile;
+                            do {
+                                tile = Math.floor(Math.random() * 6);
+                            } while (
+                                // Avoid horizontal matches
+                                (i % gridWidth >= 2 && 
+                                 newBoard[i - 1] === tile && 
+                                 newBoard[i - 2] === tile) ||
+                                // Avoid vertical matches
+                                (i >= gridWidth * 2 && 
+                                 newBoard[i - gridWidth] === tile && 
+                                 newBoard[i - gridWidth * 2] === tile)
+                            );
+                            newBoard.push(tile);
+                        }
+                        return newBoard;
+                    };
+                    setBoard(generateBoard());
+                }, []);
+
+                const handleTileClick = (index) => {
+                    if (selectedTile === null) {
+                        setSelectedTile(index);
+                    } else {
+                        // Check adjacency with row boundary handling
+                        const selectedRow = Math.floor(selectedTile / gridWidth);
+                        const indexRow = Math.floor(index / gridWidth);
+                        const isHorizontalAdjacent = 
+                            selectedRow === indexRow && 
+                            (index === selectedTile - 1 || index === selectedTile + 1);
+                        const isVerticalAdjacent = 
+                            index === selectedTile - gridWidth || 
+                            index === selectedTile + gridWidth;
+                        const isAdjacent = isHorizontalAdjacent || isVerticalAdjacent;
+
+                        if (isAdjacent) {
+                            // Store indices before clearing selection
+                            const tileA = selectedTile;
+                            const tileB = index;
+                            
+                            // Swap logic
+                            const newBoard = [...board];
+                            [newBoard[tileA], newBoard[tileB]] = [newBoard[tileB], newBoard[tileA]];
+                            setBoard(newBoard);
+                            setSelectedTile(null);
+                            
+                            // Simulation of a match processing (Visual feedback + Score)
+                            setTimeout(() => {
+                                setScore(s => s + 150);
+                                setPoints(p => p + 15);
+                                // Simulate falling tiles after match
+                                const refreshedBoard = [...newBoard];
+                                refreshedBoard[tileA] = Math.floor(Math.random() * 6);
+                                refreshedBoard[tileB] = Math.floor(Math.random() * 6);
+                                setBoard(refreshedBoard);
+                            }, 400);
+                        } else {
+                            setSelectedTile(index);
+                        }
+                    }
+                };
+
+                return (
+                    <div className="flex-1 flex flex-col items-center justify-center p-4 animate-in fade-in pb-32">
+                        <div className="text-center mb-8">
+                            <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Stellara_Grid</h2>
+                            <div className="flex items-center justify-center gap-3 mt-2">
+                                <span className="text-[10px] text-amber-500 uppercase tracking-[0.4em] font-bold bg-amber-500/10 px-4 py-1 rounded-full border border-amber-500/20">Session Score: {score}</span>
+                            </div>
+                        </div>
+
+                        {/* 8x8 MATCH-3 GRID */}
+                        <div className="bg-[#0f172a] p-3 rounded-[2rem] border border-slate-700 shadow-2xl relative">
+                            <div className="grid grid-cols-8 gap-1 md:gap-2" style={{width: '340px', height: '340px'}}>
+                                {board.map((tileType, i) => {
+                                    const TileComponent = TileSVGs[tileType];
+                                    const isSelected = selectedTile === i;
+                                    return (
+                                        <div 
+                                            key={i} 
+                                            onClick={() => handleTileClick(i)}
+                                            className={`
+                                                relative flex items-center justify-center bg-slate-800/80 rounded-xl cursor-pointer
+                                                border-2 transition-all duration-200 shadow-inner overflow-hidden
+                                                ${isSelected ? 'border-amber-400 scale-110 z-10' : 'border-slate-700 hover:border-slate-500'}
+                                            `}
+                                        >
+                                            {TileComponent && (
+                                                <div className={`w-3/4 h-3/4 transition-transform duration-300 ${isSelected ? 'animate-pulse' : ''}`}>
+                                                    <TileComponent />
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                        <p className="text-[9px] text-slate-500 uppercase tracking-widest mt-8 italic text-center max-w-xs">
+                            Tap a tile, then tap an adjacent tile to initiate swap and align the Stellara sequence.
+                        </p>
+                    </div>
+                );
+            };
 
             // ── View: Downloads / Vault ──────────────────────────────────────────
             const DownloadsView = () => (
@@ -382,20 +704,19 @@
                 <div className="flex-1 p-8 overflow-y-auto custom-scroll animate-in zoom-in pb-32">
                     <div className="max-w-xl mx-auto space-y-10">
                         <div className="flex flex-col items-center space-y-6">
-                            <div className="w-36 h-36 bg-slate-950 rounded-[3rem] flex items-center justify-center border-2 border-amber-500/30 shadow-[0_0_60px_#fbbf2415]">
-                                <SovereignStar size={72} />
+                            <div className="w-36 h-36 bg-slate-950 rounded-[3rem] flex items-center justify-center border-2 border-blue-500/30 shadow-[0_0_60px_#3b82f615]">
+                                <GamifiedLogo size={72} />
                             </div>
                             <div className="text-center space-y-2">
-                                <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-none">{identity}</h2>
-                                <span className="text-[10px] text-amber-500 font-black uppercase tracking-[0.4em]">Sovereign Nucleus</span>
+                                <h2 className="text-4xl font-black text-white uppercase tracking-tighter leading-none">{identity}</h2>
+                                <span className="text-[10px] text-blue-500 font-black uppercase tracking-[0.4em]">{NEXUS_DATA.identity.rank}</span>
                             </div>
                         </div>
 
                         <div className="bg-slate-900/40 p-10 rounded-[3rem] border border-white/5 space-y-8 shadow-2xl">
                             <div className="space-y-4">
-                                <span className="text-[8px] text-slate-600 font-black uppercase tracking-widest">Efficiency Architect Shard</span>
-                                <p className="text-xs text-slate-300 italic leading-relaxed font-bold">Collaborative Infrastructure Re-engineering.</p>
-                                <p className="text-[11px] text-slate-500 leading-relaxed italic">Managing technical debt through Stellara-inspired automation. Championing mobile-first usability for field nodes.</p>
+                                <span className="text-[8px] text-slate-600 font-black uppercase tracking-widest">Mission Statement</span>
+                                <p className="text-[11px] text-slate-400 leading-relaxed">{NEXUS_DATA.identity.bio}</p>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="p-5 bg-black/40 rounded-3xl border border-white/5 text-center">
@@ -412,12 +733,35 @@
                 </div>
             );
 
-            // ── View: Workspace / DevOps Studio ─────────────────────────────────
+            // ── View: Workspace / Brand Vault ────────────────────────────────────
             const WorkspaceView = () => (
                 <div className="flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32">
-                    <h2 className="text-3xl font-black text-white uppercase mb-8">DevOps_Studio</h2>
+                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter italic leading-none mb-8">Brand_Vault</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6 shadow-2xl">
+                        {/* Logo Concepts */}
+                        <div className="glass p-8 rounded-[3rem] border border-white/5 space-y-6">
+                            <div className="flex items-center gap-3">
+                                <ShieldCheck size={20} className="text-amber-500" />
+                                <span className="text-xs font-black text-white uppercase tracking-widest">Logo_Concepts_Logged</span>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="p-4 bg-black/40 border border-amber-500/20 rounded-2xl flex justify-between items-center">
+                                    <span className="text-[10px] font-black text-amber-500 uppercase">A. Gold Classic Shield</span>
+                                    <CheckCircle2 size={14} className="text-emerald-500" />
+                                </div>
+                                <div className="p-4 bg-blue-900/20 border border-blue-500/40 rounded-2xl flex justify-between items-center shadow-[0_0_15px_#3b82f630]">
+                                    <span className="text-[10px] font-black text-blue-400 uppercase">B. Modern Blue/Silver (Active)</span>
+                                    <CheckCircle2 size={14} className="text-emerald-500" />
+                                </div>
+                                <div className="p-4 bg-black/40 border border-white/10 rounded-2xl flex justify-between items-center">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase">C. Pixel Art Shield</span>
+                                    <CheckCircle2 size={14} className="text-emerald-500" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* DevOps Tools */}
+                        <div className="glass p-8 rounded-[3rem] border border-white/5 space-y-6">
                             <div className="flex items-center gap-3">
                                 <Layout size={18} className="text-amber-500" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Handshake_Tools</span>
@@ -441,26 +785,25 @@
                                     <Layout size={16} className="text-slate-400" />
                                     <span className="text-[9px] font-black text-white uppercase">Google Sites</span>
                                 </a>
+                                <a
+                                    href="https://github.com/NicholaiMM/gamifiedlearning.github.io"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
+                                >
+                                    <Code2 size={16} className="text-slate-400" />
+                                    <span className="text-[9px] font-black text-white uppercase">GitHub</span>
+                                </a>
+                                <a
+                                    href="https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
+                                >
+                                    <FileText size={16} className="text-slate-400" />
+                                    <span className="text-[9px] font-black text-white uppercase">Resume</span>
+                                </a>
                             </div>
-                        </div>
-
-                        <div className="bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6">
-                            <div className="flex items-center gap-3">
-                                <FileText size={18} className="text-blue-500" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Resources</span>
-                            </div>
-                            <a
-                                href="https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-start gap-3 transition-all"
-                            >
-                                <FileText size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
-                                <div>
-                                    <p className="text-[9px] font-black text-white uppercase">Master_Resume.md</p>
-                                    <p className="text-[8px] text-slate-500 mt-1">Team-based efficiency calibrated.</p>
-                                </div>
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -468,39 +811,39 @@
 
             // ── Root render ──────────────────────────────────────────────────────
             return (
-                <div className="fixed inset-0 bg-[#020202] text-slate-400 flex flex-col selection:bg-blue-500/30 overflow-hidden font-sans">
+                <div className="fixed inset-0 bg-[#020617] text-slate-400 flex flex-col selection:bg-blue-500/30 overflow-hidden font-sans">
 
-                    {/* HUD HEADER */}
-                    <nav className="h-14 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[80] backdrop-blur-2xl flex-shrink-0">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('overworld')}>
-                            <SovereignStar size={22} />
-                            <h1 className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Nexus_Arcade_v12.9</h1>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white/5 px-4 py-1 rounded-full border border-white/10 flex items-center gap-2">
-                                <BatteryFull size={12} className="text-emerald-500" />
-                                <span className="text-[10px] font-black text-white font-mono">{battery !== null ? battery : '--'}%</span>
+                    {/* BRANDED HEADER */}
+                    <nav className="h-16 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[100] backdrop-blur-3xl shadow-lg">
+                        <div className="flex items-center gap-4 cursor-pointer" onClick={() => setView('overworld')}>
+                            <GamifiedLogo size={36} />
+                            <div className="flex flex-col">
+                                <h1 className="text-white font-black text-[11px] uppercase tracking-[0.3em] leading-none">Gamified_Learning.org</h1>
+                                <span className="text-[8px] text-blue-500 font-bold uppercase tracking-widest mt-1">OS v{NEXUS_DATA.version} // Stellara</span>
                             </div>
+                        </div>
+                        <div className="hidden md:flex items-center gap-4">
+                            <span className="text-[10px] text-slate-400 font-mono uppercase">XP: {points}</span>
                         </div>
                     </nav>
 
                     {/* VIEWPORT */}
-                    <main className="flex-1 relative flex overflow-hidden w-full">
-                        {view === 'overworld'  && <OverworldMap />}
-                        {/* 'arcade' and 'terminal' both render the terminal – 'arcade' is navigated to
-                            from map game-nodes while 'terminal' is used from the nav dock */}
-                        {(view === 'terminal' || view === 'arcade') && <ArcadeTerminal />}
-                        {view === 'downloads'  && <DownloadsView />}
-                        {view === 'profile'    && <ProfileView />}
-                        {view === 'workspace'  && <WorkspaceView />}
+                    <main className="flex-1 relative flex overflow-hidden w-full h-full pb-20">
+                        {view === 'overworld' && <OverworldMap />}
+                        {view === 'arcade' && <StellaraGrid />}
+                        {view === 'terminal' && <ArcadeTerminal />}
+                        {view === 'downloads' && <DownloadsView />}
+                        {view === 'profile' && <ProfileView />}
+                        {view === 'workspace' && <WorkspaceView />}
                     </main>
 
-                    {/* NAVIGATION DOCK (Thumb-Safe) */}
+                    {/* MOBILE THUMB DOCK */}
                     <div className="h-20 border-t border-white/5 bg-black/95 flex items-center justify-around px-4 z-[80] backdrop-blur-2xl flex-shrink-0">
-                        <NavBtn active={view === 'overworld'}                          icon={MapIcon}       label="Map"      onClick={() => setView('overworld')} />
-                        <NavBtn active={view === 'terminal' || view === 'arcade'}      icon={TermIcon}      label="Terminal" onClick={() => setView('terminal')}  />
-                        <NavBtn active={view === 'downloads'}                          icon={Download}      label="Vault"    onClick={() => setView('downloads')} />
-                        <NavBtn active={view === 'profile'}                            icon={User}          label="Profile"  onClick={() => setView('profile')}   />
+                        <NavBtn active={view === 'overworld'} icon={MapIcon} label="Map" onClick={() => setView('overworld')} />
+                        <NavBtn active={view === 'arcade'} icon={Gamepad2} label="Arcade" onClick={() => setView('arcade')} />
+                        <NavBtn active={view === 'terminal'} icon={TermIcon} label="Terminal" onClick={() => setView('terminal')} />
+                        <NavBtn active={view === 'downloads'} icon={Download} label="Vault" onClick={() => setView('downloads')} />
+                        <NavBtn active={view === 'profile'} icon={User} label="Profile" onClick={() => setView('profile')} />
                     </div>
                 </div>
             );
@@ -509,6 +852,39 @@
         // ─── Mount ────────────────────────────────────────────────────────────────
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+        
+        // ─── Error Boundary ───────────────────────────────────────────────────────
+        window.onerror = (msg, url, lineNo, columnNo, error) => {
+            console.error('Application Error:', { msg, url, lineNo, columnNo, error });
+            return false;
+        };
+        
+        window.onunhandledrejection = (event) => {
+            console.error('Unhandled Promise Rejection:', event.reason);
+        };
+    </script>
+    
+    <!-- Service Worker Registration (for PWA) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Service worker can be added for offline support
+                // navigator.serviceWorker.register('/sw.js');
+                console.log('[Gamified Learning] PWA-ready environment detected');
+            });
+        }
+        
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData) {
+                        console.log(`[Gamified Learning] Page load: ${Math.round(perfData.loadEventEnd)}ms`);
+                    }
+                }, 0);
+            });
+        }
     </script>
 </body>
 </html>
