@@ -20,9 +20,6 @@
     <!-- Lucide React Icons (UMD) -->
     <script src="https://unpkg.com/lucide-react@0.309.0/dist/umd/lucide-react.min.js"></script>
 
-    <!-- Babel Standalone for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
     <style>
         body { font-family: 'Inter', sans-serif; background: #020202; }
 
@@ -71,9 +68,10 @@
         window.__initial_auth_token = null;
     </script>
 
-    <script type="text/babel">
+    <script>
         // ─── React hooks ──────────────────────────────────────────────────────────
         const { useState, useEffect, useRef } = React;
+        const e = React.createElement;
 
         // ─── Lucide icons ─────────────────────────────────────────────────────────
         const {
@@ -90,37 +88,27 @@
             firebaseApp = firebase.initializeApp(firebaseConfig);
             auth = firebase.auth(firebaseApp);
             db   = firebase.firestore(firebaseApp);
-        } catch (e) {
-            console.warn('Firebase init skipped:', e.message);
+        } catch (err) {
+            console.warn('Firebase init skipped:', err.message);
         }
 
         // ─── SovereignStar ────────────────────────────────────────────────────────
         const SovereignStar = ({ size = 24, color = "#fbbf24", glow = true, className = "" }) => {
             const filter = glow ? `drop-shadow(0 0 10px ${color}80)` : 'none';
-            return (
-                <svg
-                    width={size}
-                    height={size}
-                    viewBox="0 0 24 24"
-                    fill={color}
-                    style={{ filter }}
-                    className={className}
-                >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                </svg>
+            return e('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: color, style: { filter }, className },
+                e('path', { d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" })
             );
         };
 
         // ─── NavBtn ───────────────────────────────────────────────────────────────
-        const NavBtn = ({ active, icon: Icon, label, onClick }) => (
-            <button
-                onClick={onClick}
-                className={`flex flex-col items-center gap-1 px-4 py-2 transition-all rounded-2xl ${active ? 'text-white' : 'text-slate-600'}`}
-            >
-                <Icon size={20} className={active ? 'text-blue-400' : ''} />
-                <span className="text-[7px] font-black uppercase tracking-widest">{label}</span>
-            </button>
-        );
+        const NavBtn = ({ active, icon: Icon, label, onClick }) =>
+            e('button', {
+                onClick,
+                className: `flex flex-col items-center gap-1 px-4 py-2 transition-all rounded-2xl ${active ? 'text-white' : 'text-slate-600'}`
+            },
+                e(Icon, { size: 20, className: active ? 'text-blue-400' : '' }),
+                e('span', { className: "text-[7px] font-black uppercase tracking-widest" }, label)
+            );
 
         // ─── App ──────────────────────────────────────────────────────────────────
         const App = () => {
@@ -231,284 +219,257 @@
             };
 
             // ── View: Overworld Map ──────────────────────────────────────────────
-            const OverworldMap = () => (
-                <div className="flex-1 relative bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4">
-                    {/* Dot-grid background */}
-                    <div
-                        className="absolute inset-0 opacity-10 pointer-events-none"
-                        style={{
-                            backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)',
-                            backgroundSize: '40px 40px'
-                        }}
-                    />
-
-                    {/* Map canvas */}
-                    <div className="relative w-full max-w-lg aspect-square bg-blue-900/5 border border-blue-500/20 rounded-[4rem] shadow-[0_0_100px_rgba(30,58,138,0.3)]">
-                        <h2 className="absolute top-8 left-0 right-0 text-center text-blue-400 font-black uppercase text-xs tracking-[0.5em]">
-                            Stellara_Matrix_Map
-                        </h2>
-
-                        {arcadeNodes.map(node => {
+            const OverworldMap = () =>
+                e('div', { className: "flex-1 relative bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4" },
+                    e('div', {
+                        className: "absolute inset-0 opacity-10 pointer-events-none",
+                        style: { backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '40px 40px' }
+                    }),
+                    e('div', { className: "relative w-full max-w-lg aspect-square bg-blue-900/5 border border-blue-500/20 rounded-[4rem] shadow-[0_0_100px_rgba(30,58,138,0.3)]" },
+                        e('h2', { className: "absolute top-8 left-0 right-0 text-center text-blue-400 font-black uppercase text-xs tracking-[0.5em]" },
+                            "Stellara_Matrix_Map"
+                        ),
+                        ...arcadeNodes.map(node => {
                             const isUnlocked = unlockedNodes.includes(node.id) || node.type === 'hub';
                             const NodeIcon   = node.icon;
                             const handleClick = () => {
                                 if (!isUnlocked) { logTerm("Node is encrypted."); return; }
-                                if (node.type === 'hub')     setView('workspace');
+                                if (node.type === 'hub')         setView('workspace');
                                 else if (node.type === 'mystery') setView('downloads');
                                 else                              setView('terminal');
                             };
-                            return (
-                                <div
-                                    key={node.id}
-                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 cursor-pointer"
-                                    style={{ left: node.x, top: node.y }}
-                                    onClick={handleClick}
-                                >
-                                    <div className="relative flex flex-col items-center group">
-                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all ${isUnlocked ? 'bg-black border-blue-500 shadow-[0_0_20px_#3b82f640] scale-110' : 'bg-slate-900 border-white/5 opacity-40 scale-90 grayscale'}`}>
-                                            {node.id === 'mystery_node'
-                                                ? <SovereignStar size={24} color={isUnlocked ? "#fbbf24" : "#475569"} />
-                                                : <NodeIcon size={22} className={isUnlocked ? "text-blue-400" : "text-slate-600"} />
-                                            }
-                                        </div>
-                                        <span className={`mt-2 text-[8px] font-black uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded bg-black/80 border border-white/5 ${isUnlocked ? 'text-white' : 'text-slate-700'}`}>
-                                            {node.name}
-                                        </span>
-                                        {isUnlocked && (
-                                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-ping pointer-events-none" />
-                                        )}
-                                    </div>
-                                </div>
+                            return e('div', {
+                                key: node.id,
+                                className: "absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 cursor-pointer",
+                                style: { left: node.x, top: node.y },
+                                onClick: handleClick
+                            },
+                                e('div', { className: "relative flex flex-col items-center group" },
+                                    e('div', { className: `w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all ${isUnlocked ? 'bg-black border-blue-500 shadow-[0_0_20px_#3b82f640] scale-110' : 'bg-slate-900 border-white/5 opacity-40 scale-90 grayscale'}` },
+                                        node.id === 'mystery_node'
+                                            ? e(SovereignStar, { size: 24, color: isUnlocked ? "#fbbf24" : "#475569" })
+                                            : e(NodeIcon, { size: 22, className: isUnlocked ? "text-blue-400" : "text-slate-600" })
+                                    ),
+                                    e('span', { className: `mt-2 text-[8px] font-black uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded bg-black/80 border border-white/5 ${isUnlocked ? 'text-white' : 'text-slate-700'}` },
+                                        node.name
+                                    ),
+                                    isUnlocked && e('div', { className: "absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-ping pointer-events-none" })
+                                )
                             );
-                        })}
-                    </div>
-
-                    {/* Telemetry cards */}
-                    <div className="mt-8 flex gap-4 overflow-x-auto w-full px-4 no-scrollbar">
-                        <div className="flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2">
-                            <span className="text-[8px] text-slate-500 uppercase font-black tracking-widest">Active_Telemetry</span>
-                            <div className="flex justify-between items-end">
-                                <span className="text-xl font-black text-white">{points}</span>
-                                <span className="text-[9px] text-emerald-500 font-bold mb-1">XP</span>
-                            </div>
-                        </div>
-                        <div className="flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2">
-                            <span className="text-[8px] text-slate-500 uppercase font-black tracking-widest">Mystery_Progress</span>
-                            <div className="flex justify-between items-end">
-                                <span className="text-xl font-black text-white">{Math.round((unlockedNodes.length / arcadeNodes.length) * 100)}%</span>
-                                <span className="text-[9px] text-blue-500 font-bold mb-1">SYNC</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+                        })
+                    ),
+                    e('div', { className: "mt-8 flex gap-4 overflow-x-auto w-full px-4 no-scrollbar" },
+                        e('div', { className: "flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2" },
+                            e('span', { className: "text-[8px] text-slate-500 uppercase font-black tracking-widest" }, "Active_Telemetry"),
+                            e('div', { className: "flex justify-between items-end" },
+                                e('span', { className: "text-xl font-black text-white" }, points),
+                                e('span', { className: "text-[9px] text-emerald-500 font-bold mb-1" }, "XP")
+                            )
+                        ),
+                        e('div', { className: "flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2" },
+                            e('span', { className: "text-[8px] text-slate-500 uppercase font-black tracking-widest" }, "Mystery_Progress"),
+                            e('div', { className: "flex justify-between items-end" },
+                                e('span', { className: "text-xl font-black text-white" }, `${Math.round((unlockedNodes.length / arcadeNodes.length) * 100)}%`),
+                                e('span', { className: "text-[9px] text-blue-500 font-bold mb-1" }, "SYNC")
+                            )
+                        )
+                    )
+                );
 
             // ── View: Arcade Terminal ────────────────────────────────────────────
-            const ArcadeTerminal = () => (
-                <div className="flex-1 flex flex-col p-4 md:p-8 space-y-4 animate-in fade-in pb-32">
-                    <div className="flex items-center gap-3 mb-2">
-                        <TerminalSquare size={20} className="text-emerald-500" />
-                        <h2 className="text-white font-black uppercase text-sm tracking-[0.2em]">Arcade_Terminal_v1.0</h2>
-                    </div>
-                    <div className="flex-1 bg-black/80 rounded-[2.5rem] border border-white/10 p-6 font-mono text-[11px] flex flex-col shadow-2xl backdrop-blur-xl">
-                        <div ref={terminalRef} className="flex-1 overflow-y-auto custom-scroll space-y-1 mb-4 pr-2">
-                            {terminalHistory.map((line, i) => (
-                                <div key={i} className={line.startsWith('>') ? 'text-blue-400' : 'text-emerald-500/80 italic'}>
-                                    {line}
-                                </div>
-                            ))}
-                        </div>
-                        <div className="flex items-center gap-3 border-t border-white/10 pt-4">
-                            <span className="text-blue-500 font-black uppercase">Guardian@Nexus:~$</span>
-                            <input
-                                autoFocus
-                                value={termInput}
-                                onChange={(e) => setTermInput(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && runCommand(termInput)}
-                                className="flex-1 bg-transparent border-none outline-none text-white font-mono"
-                                placeholder="..."
-                            />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={() => runCommand('stats')}
-                            className="p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        >Run_Stats</button>
-                        <button
-                            onClick={() => runCommand('map')}
-                            className="p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        >Open_Map</button>
-                    </div>
-                </div>
-            );
+            const ArcadeTerminal = () =>
+                e('div', { className: "flex-1 flex flex-col p-4 md:p-8 space-y-4 animate-in fade-in pb-32" },
+                    e('div', { className: "flex items-center gap-3 mb-2" },
+                        e(TerminalSquare, { size: 20, className: "text-emerald-500" }),
+                        e('h2', { className: "text-white font-black uppercase text-sm tracking-[0.2em]" }, "Arcade_Terminal_v1.0")
+                    ),
+                    e('div', { className: "flex-1 bg-black/80 rounded-[2.5rem] border border-white/10 p-6 font-mono text-[11px] flex flex-col shadow-2xl backdrop-blur-xl" },
+                        e('div', { ref: terminalRef, className: "flex-1 overflow-y-auto custom-scroll space-y-1 mb-4 pr-2" },
+                            ...terminalHistory.map((line, i) =>
+                                e('div', { key: i, className: line.startsWith('>') ? 'text-blue-400' : 'text-emerald-500/80 italic' }, line)
+                            )
+                        ),
+                        e('div', { className: "flex items-center gap-3 border-t border-white/10 pt-4" },
+                            e('span', { className: "text-blue-500 font-black uppercase" }, "Guardian@Nexus:~$"),
+                            e('input', {
+                                autoFocus: true,
+                                value: termInput,
+                                onChange: (ev) => setTermInput(ev.target.value),
+                                onKeyDown: (ev) => ev.key === 'Enter' && runCommand(termInput),
+                                className: "flex-1 bg-transparent border-none outline-none text-white font-mono",
+                                placeholder: "..."
+                            })
+                        )
+                    ),
+                    e('div', { className: "grid grid-cols-2 gap-4" },
+                        e('button', {
+                            onClick: () => runCommand('stats'),
+                            className: "p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
+                        }, "Run_Stats"),
+                        e('button', {
+                            onClick: () => runCommand('map'),
+                            className: "p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
+                        }, "Open_Map")
+                    )
+                );
 
             // ── View: Downloads / Vault ──────────────────────────────────────────
-            const DownloadsView = () => (
-                <div className="flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32">
-                    <h2 className="text-4xl font-black text-white uppercase tracking-tighter mb-12">Vault_Downloads</h2>
-                    <div className="grid grid-cols-1 gap-6">
-                        {certificates.length > 0 ? certificates.map((cert, i) => (
-                            <div key={i} className="p-8 bg-slate-900/40 rounded-[2.5rem] border border-emerald-500/20 flex items-center justify-between group">
-                                <div className="flex items-center gap-6">
-                                    <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20">
-                                        <CheckCircle2 size={28} className="text-emerald-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xl font-black text-white uppercase">{cert}</h4>
-                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Sovereign Proficiency Shard</p>
-                                    </div>
-                                </div>
-                                <button className="w-12 h-12 bg-emerald-600 text-black rounded-xl flex items-center justify-center active:scale-90 transition-all">
-                                    <Download size={20} />
-                                </button>
-                            </div>
-                        )) : (
-                            <div className="text-center p-20 glass rounded-[3rem] border border-dashed border-white/10">
-                                <AlertTriangle size={48} className="text-slate-800 mx-auto mb-6" />
-                                <p className="text-xs text-slate-600 uppercase font-black tracking-widest">No Certificates Unlocked</p>
-                                <button
-                                    onClick={() => unlockFeature('mystery_node')}
-                                    className="mt-6 text-[10px] text-blue-500 font-black uppercase hover:underline"
-                                >Force_Sync_Certificates?</button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
+            const DownloadsView = () =>
+                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32" },
+                    e('h2', { className: "text-4xl font-black text-white uppercase tracking-tighter mb-12" }, "Vault_Downloads"),
+                    e('div', { className: "grid grid-cols-1 gap-6" },
+                        certificates.length > 0
+                            ? certificates.map((cert, i) =>
+                                e('div', { key: i, className: "p-8 bg-slate-900/40 rounded-[2.5rem] border border-emerald-500/20 flex items-center justify-between group" },
+                                    e('div', { className: "flex items-center gap-6" },
+                                        e('div', { className: "w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20" },
+                                            e(CheckCircle2, { size: 28, className: "text-emerald-500" })
+                                        ),
+                                        e('div', null,
+                                            e('h4', { className: "text-xl font-black text-white uppercase" }, cert),
+                                            e('p', { className: "text-[9px] text-slate-500 font-bold uppercase tracking-widest" }, "Sovereign Proficiency Shard")
+                                        )
+                                    ),
+                                    e('button', { className: "w-12 h-12 bg-emerald-600 text-black rounded-xl flex items-center justify-center active:scale-90 transition-all" },
+                                        e(Download, { size: 20 })
+                                    )
+                                )
+                            )
+                            : e('div', { className: "text-center p-20 glass rounded-[3rem] border border-dashed border-white/10" },
+                                e(AlertTriangle, { size: 48, className: "text-slate-800 mx-auto mb-6" }),
+                                e('p', { className: "text-xs text-slate-600 uppercase font-black tracking-widest" }, "No Certificates Unlocked"),
+                                e('button', {
+                                    onClick: () => unlockFeature('mystery_node'),
+                                    className: "mt-6 text-[10px] text-blue-500 font-black uppercase hover:underline"
+                                }, "Force_Sync_Certificates?")
+                            )
+                    )
+                );
 
             // ── View: Profile ────────────────────────────────────────────────────
-            const ProfileView = () => (
-                <div className="flex-1 p-8 overflow-y-auto custom-scroll animate-in zoom-in pb-32">
-                    <div className="max-w-xl mx-auto space-y-10">
-                        <div className="flex flex-col items-center space-y-6">
-                            <div className="w-36 h-36 bg-slate-950 rounded-[3rem] flex items-center justify-center border-2 border-amber-500/30 shadow-[0_0_60px_#fbbf2415]">
-                                <SovereignStar size={72} />
-                            </div>
-                            <div className="text-center space-y-2">
-                                <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-none">{identity}</h2>
-                                <span className="text-[10px] text-amber-500 font-black uppercase tracking-[0.4em]">Sovereign Nucleus</span>
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-900/40 p-10 rounded-[3rem] border border-white/5 space-y-8 shadow-2xl">
-                            <div className="space-y-4">
-                                <span className="text-[8px] text-slate-600 font-black uppercase tracking-widest">Efficiency Architect Shard</span>
-                                <p className="text-xs text-slate-300 italic leading-relaxed font-bold">Collaborative Infrastructure Re-engineering.</p>
-                                <p className="text-[11px] text-slate-500 leading-relaxed italic">Managing technical debt through Stellara-inspired automation. Championing mobile-first usability for field nodes.</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-5 bg-black/40 rounded-3xl border border-white/5 text-center">
-                                    <span className="text-[8px] text-slate-600 font-black uppercase block mb-1">Local Node</span>
-                                    <span className="text-[10px] text-white font-bold uppercase">Tampa / B10</span>
-                                </div>
-                                <div className="p-5 bg-black/40 rounded-3xl border border-white/5 text-center">
-                                    <span className="text-[8px] text-slate-600 font-black uppercase block mb-1">Arcade Rank</span>
-                                    <span className="text-[10px] text-white font-bold uppercase">S-Class</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+            const ProfileView = () =>
+                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in zoom-in pb-32" },
+                    e('div', { className: "max-w-xl mx-auto space-y-10" },
+                        e('div', { className: "flex flex-col items-center space-y-6" },
+                            e('div', { className: "w-36 h-36 bg-slate-950 rounded-[3rem] flex items-center justify-center border-2 border-amber-500/30 shadow-[0_0_60px_#fbbf2415]" },
+                                e(SovereignStar, { size: 72 })
+                            ),
+                            e('div', { className: "text-center space-y-2" },
+                                e('h2', { className: "text-5xl font-black text-white uppercase tracking-tighter leading-none" }, identity),
+                                e('span', { className: "text-[10px] text-amber-500 font-black uppercase tracking-[0.4em]" }, "Sovereign Nucleus")
+                            )
+                        ),
+                        e('div', { className: "bg-slate-900/40 p-10 rounded-[3rem] border border-white/5 space-y-8 shadow-2xl" },
+                            e('div', { className: "space-y-4" },
+                                e('span', { className: "text-[8px] text-slate-600 font-black uppercase tracking-widest" }, "Efficiency Architect Shard"),
+                                e('p', { className: "text-xs text-slate-300 italic leading-relaxed font-bold" }, "Collaborative Infrastructure Re-engineering."),
+                                e('p', { className: "text-[11px] text-slate-500 leading-relaxed italic" }, "Managing technical debt through Stellara-inspired automation. Championing mobile-first usability for field nodes.")
+                            ),
+                            e('div', { className: "grid grid-cols-2 gap-4" },
+                                e('div', { className: "p-5 bg-black/40 rounded-3xl border border-white/5 text-center" },
+                                    e('span', { className: "text-[8px] text-slate-600 font-black uppercase block mb-1" }, "Local Node"),
+                                    e('span', { className: "text-[10px] text-white font-bold uppercase" }, "Tampa / B10")
+                                ),
+                                e('div', { className: "p-5 bg-black/40 rounded-3xl border border-white/5 text-center" },
+                                    e('span', { className: "text-[8px] text-slate-600 font-black uppercase block mb-1" }, "Arcade Rank"),
+                                    e('span', { className: "text-[10px] text-white font-bold uppercase" }, "S-Class")
+                                )
+                            )
+                        )
+                    )
+                );
 
             // ── View: Workspace / DevOps Studio ─────────────────────────────────
-            const WorkspaceView = () => (
-                <div className="flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32">
-                    <h2 className="text-3xl font-black text-white uppercase mb-8">DevOps_Studio</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6 shadow-2xl">
-                            <div className="flex items-center gap-3">
-                                <Layout size={18} className="text-amber-500" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Handshake_Tools</span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-3">
-                                <a
-                                    href="https://script.google.com/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
-                                >
-                                    <Code2 size={16} className="text-slate-400" />
-                                    <span className="text-[9px] font-black text-white uppercase">Apps Script</span>
-                                </a>
-                                <a
-                                    href="https://sites.google.com/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
-                                >
-                                    <Layout size={16} className="text-slate-400" />
-                                    <span className="text-[9px] font-black text-white uppercase">Google Sites</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6">
-                            <div className="flex items-center gap-3">
-                                <FileText size={18} className="text-blue-500" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">Resources</span>
-                            </div>
-                            <a
-                                href="https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-start gap-3 transition-all"
-                            >
-                                <FileText size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
-                                <div>
-                                    <p className="text-[9px] font-black text-white uppercase">Master_Resume.md</p>
-                                    <p className="text-[8px] text-slate-500 mt-1">Team-based efficiency calibrated.</p>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            );
+            const WorkspaceView = () =>
+                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32" },
+                    e('h2', { className: "text-3xl font-black text-white uppercase mb-8" }, "DevOps_Studio"),
+                    e('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
+                        e('div', { className: "bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6 shadow-2xl" },
+                            e('div', { className: "flex items-center gap-3" },
+                                e(Layout, { size: 18, className: "text-amber-500" }),
+                                e('span', { className: "text-[10px] font-black uppercase tracking-[0.3em] text-white" }, "Handshake_Tools")
+                            ),
+                            e('div', { className: "grid grid-cols-2 gap-3" },
+                                e('a', {
+                                    href: "https://script.google.com/",
+                                    target: "_blank",
+                                    rel: "noopener noreferrer",
+                                    className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
+                                },
+                                    e(Code2, { size: 16, className: "text-slate-400" }),
+                                    e('span', { className: "text-[9px] font-black text-white uppercase" }, "Apps Script")
+                                ),
+                                e('a', {
+                                    href: "https://sites.google.com/",
+                                    target: "_blank",
+                                    rel: "noopener noreferrer",
+                                    className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
+                                },
+                                    e(Layout, { size: 16, className: "text-slate-400" }),
+                                    e('span', { className: "text-[9px] font-black text-white uppercase" }, "Google Sites")
+                                )
+                            )
+                        ),
+                        e('div', { className: "bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6" },
+                            e('div', { className: "flex items-center gap-3" },
+                                e(FileText, { size: 18, className: "text-blue-500" }),
+                                e('span', { className: "text-[10px] font-black uppercase tracking-[0.3em] text-white" }, "Resources")
+                            ),
+                            e('a', {
+                                href: "https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit",
+                                target: "_blank",
+                                rel: "noopener noreferrer",
+                                className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-start gap-3 transition-all"
+                            },
+                                e(FileText, { size: 16, className: "text-slate-400 mt-0.5 flex-shrink-0" }),
+                                e('div', null,
+                                    e('p', { className: "text-[9px] font-black text-white uppercase" }, "Master_Resume.md"),
+                                    e('p', { className: "text-[8px] text-slate-500 mt-1" }, "Team-based efficiency calibrated.")
+                                )
+                            )
+                        )
+                    )
+                );
 
             // ── Root render ──────────────────────────────────────────────────────
-            return (
-                <div className="fixed inset-0 bg-[#020202] text-slate-400 flex flex-col selection:bg-blue-500/30 overflow-hidden font-sans">
+            return e('div', { className: "fixed inset-0 bg-[#020202] text-slate-400 flex flex-col selection:bg-blue-500/30 overflow-hidden font-sans" },
 
-                    {/* HUD HEADER */}
-                    <nav className="h-14 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[80] backdrop-blur-2xl flex-shrink-0">
-                        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView('overworld')}>
-                            <SovereignStar size={22} />
-                            <h1 className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Nexus_Arcade_v12.9</h1>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white/5 px-4 py-1 rounded-full border border-white/10 flex items-center gap-2">
-                                <BatteryFull size={12} className="text-emerald-500" />
-                                <span className="text-[10px] font-black text-white font-mono">{battery !== null ? battery : '--'}%</span>
-                            </div>
-                        </div>
-                    </nav>
+                /* HUD HEADER */
+                e('nav', { className: "h-14 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[80] backdrop-blur-2xl flex-shrink-0" },
+                    e('div', { className: "flex items-center gap-3 cursor-pointer", onClick: () => setView('overworld') },
+                        e(SovereignStar, { size: 22 }),
+                        e('h1', { className: "text-white font-black text-[10px] uppercase tracking-[0.2em]" }, "Nexus_Arcade_v12.9")
+                    ),
+                    e('div', { className: "flex items-center gap-4" },
+                        e('div', { className: "bg-white/5 px-4 py-1 rounded-full border border-white/10 flex items-center gap-2" },
+                            e(BatteryFull, { size: 12, className: "text-emerald-500" }),
+                            e('span', { className: "text-[10px] font-black text-white font-mono" }, `${battery !== null ? battery : '--'}%`)
+                        )
+                    )
+                ),
 
-                    {/* VIEWPORT */}
-                    <main className="flex-1 relative flex overflow-hidden w-full">
-                        {view === 'overworld'  && <OverworldMap />}
-                        {/* 'arcade' and 'terminal' both render the terminal – 'arcade' is navigated to
-                            from map game-nodes while 'terminal' is used from the nav dock */}
-                        {(view === 'terminal' || view === 'arcade') && <ArcadeTerminal />}
-                        {view === 'downloads'  && <DownloadsView />}
-                        {view === 'profile'    && <ProfileView />}
-                        {view === 'workspace'  && <WorkspaceView />}
-                    </main>
+                /* VIEWPORT */
+                e('main', { className: "flex-1 relative flex overflow-hidden w-full" },
+                    view === 'overworld'                       && e(OverworldMap),
+                    (view === 'terminal' || view === 'arcade') && e(ArcadeTerminal),
+                    view === 'downloads'                       && e(DownloadsView),
+                    view === 'profile'                         && e(ProfileView),
+                    view === 'workspace'                       && e(WorkspaceView)
+                ),
 
-                    {/* NAVIGATION DOCK (Thumb-Safe) */}
-                    <div className="h-20 border-t border-white/5 bg-black/95 flex items-center justify-around px-4 z-[80] backdrop-blur-2xl flex-shrink-0">
-                        <NavBtn active={view === 'overworld'}                          icon={MapIcon}       label="Map"      onClick={() => setView('overworld')} />
-                        <NavBtn active={view === 'terminal' || view === 'arcade'}      icon={TermIcon}      label="Terminal" onClick={() => setView('terminal')}  />
-                        <NavBtn active={view === 'downloads'}                          icon={Download}      label="Vault"    onClick={() => setView('downloads')} />
-                        <NavBtn active={view === 'profile'}                            icon={User}          label="Profile"  onClick={() => setView('profile')}   />
-                    </div>
-                </div>
+                /* NAVIGATION DOCK (Thumb-Safe) */
+                e('div', { className: "h-20 border-t border-white/5 bg-black/95 flex items-center justify-around px-4 z-[80] backdrop-blur-2xl flex-shrink-0" },
+                    e(NavBtn, { active: view === 'overworld',                      icon: MapIcon,  label: "Map",      onClick: () => setView('overworld') }),
+                    e(NavBtn, { active: view === 'terminal' || view === 'arcade',  icon: TermIcon, label: "Terminal", onClick: () => setView('terminal')  }),
+                    e(NavBtn, { active: view === 'downloads',                      icon: Download, label: "Vault",    onClick: () => setView('downloads') }),
+                    e(NavBtn, { active: view === 'profile',                        icon: User,     label: "Profile",  onClick: () => setView('profile')   })
+                )
             );
         };
 
         // ─── Mount ────────────────────────────────────────────────────────────────
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(React.createElement(App));
     </script>
 </body>
 </html>
