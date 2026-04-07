@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Nexus Arcade</title>
-    <meta name="description" content="Nexus Arcade – gamified learning platform for developers. Unlock nodes, earn XP, and level up your skills.">
+    <title>Gamified Learning</title>
+    <meta name="description" content="Gamified Learning – gamified educational platform. Unlock nodes, earn XP, and level up your skills.">
 
     <!-- Favicon -->
     <link rel="icon" href="./favicon.svg" type="image/svg+xml">
@@ -18,11 +18,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="NexusArcade">
+    <meta name="apple-mobile-web-app-title" content="GamifiedLearning">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Nexus Arcade">
-    <meta property="og:description" content="Gamified learning platform for developers.">
+    <meta property="og:title" content="Gamified Learning">
+    <meta property="og:description" content="Gamified Learning – educational platform with arcade games, XP, and skill nodes.">
     <meta property="og:type" content="website">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -110,7 +110,7 @@
             </defs>
             <path fill="url(#sg)" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
-        <span>Nexus Arcade</span>
+        <span>Gamified Learning</span>
     </div>
     <div id="root"></div>
 
@@ -124,7 +124,7 @@
             messagingSenderId: "000000000000",
             appId: "1:000000000000:web:0000000000000000"
         });
-        window.__app_id = 'nexus-v12-9';
+        window.__app_id = 'gamified-learning-v14';
         window.__initial_auth_token = null;
     </script>
 
@@ -135,7 +135,7 @@
 
         // ─── Lucide icons ─────────────────────────────────────────────────────────
         const {
-            MapPin, Zap, Rocket, Star, Unlock,
+            MapPin, Zap, Rocket, Star, Globe, Gamepad2,
             BatteryFull, AlertTriangle, CheckCircle2, Download,
             Layout, Code2, FileText, User, TerminalSquare,
             Map: MapIcon, Terminal: TermIcon
@@ -160,6 +160,147 @@
             );
         };
 
+        // ─── GamifiedLogo ─────────────────────────────────────────────────────────
+        const GamifiedLogo = ({ size = 32 }) =>
+            e('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg" },
+                e('defs', null,
+                    e('linearGradient', { id: "gl_grad", x1: "0", y1: "0", x2: "1", y2: "1" },
+                        e('stop', { offset: "0%", stopColor: "#fbbf24" }),
+                        e('stop', { offset: "100%", stopColor: "#3b82f6" })
+                    )
+                ),
+                e('path', { d: "M12 2L4 5.5V11c0 4.97 3.39 9.63 8 10.93C16.61 20.63 20 15.97 20 11V5.5L12 2z", fill: "url(#gl_grad)" }),
+                e('path', { d: "M12 7.5L13.2 10.8H16.5l-2.7 1.97 1.02 3.23L12 14l-2.82 1.99 1.02-3.22L7.5 10.8h3.3L12 7.5z", fill: "#020202" })
+            );
+
+        // ─── Tile types for Stellara Match-3 ─────────────────────────────────────
+        const TILE_COLORS = [
+            "text-yellow-400",  // 0: Sun
+            "text-yellow-100",  // 1: Saturn
+            "text-amber-300",   // 2: Sparkles
+            "text-amber-400",   // 3: Shield
+            "text-blue-400",    // 4: Galaxy
+            "text-orange-400"   // 5: Comet
+        ];
+
+        const TileSVGs = [
+            // 0: Sun
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls, strokeWidth: "2", strokeLinecap: "round" },
+                e('circle', { cx: "12", cy: "12", r: "5", fill: "currentColor", stroke: "none" }),
+                e('path', { d: "M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41", stroke: "currentColor", fill: "none" })
+            ),
+            // 1: Saturn
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls, strokeWidth: "2" },
+                e('circle', { cx: "12", cy: "12", r: "5", fill: "currentColor", stroke: "none" }),
+                e('ellipse', { cx: "12", cy: "12", rx: "10", ry: "3.5", transform: "rotate(-20 12 12)", fill: "none", stroke: "currentColor" })
+            ),
+            // 2: Sparkles / Star-burst
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls },
+                e('path', { d: "M12 2L13.5 9.5L21 11L13.5 12.5L12 20L10.5 12.5L3 11L10.5 9.5Z", fill: "currentColor" }),
+                e('path', { d: "M5 4L5.5 6.5L8 7L5.5 7.5L5 10L4.5 7.5L2 7L4.5 6.5Z", fill: "currentColor" })
+            ),
+            // 3: Shield
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls },
+                e('path', { d: "M12 2L4 5.5V11c0 4.97 3.39 9.63 8 10.93C16.61 20.63 20 15.97 20 11V5.5L12 2z", fill: "currentColor" }),
+                e('path', { d: "M12 7.5L13.2 10.8H16.5l-2.7 1.97 1.02 3.23L12 14l-2.82 1.99 1.02-3.22L7.5 10.8h3.3L12 7.5z", fill: "#020202" })
+            ),
+            // 4: Galaxy swirl
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls, fill: "currentColor" },
+                e('path', { d: "M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10c0 1.942-.553 3.754-1.5 5.302l-1.732-1A8 8 0 1 0 12 20c1.782 0 3.425-.583 4.755-1.564l1.155 1.633A9.957 9.957 0 0 1 12 22z" }),
+                e('circle', { cx: "12", cy: "12", r: "3" })
+            ),
+            // 5: Comet
+            (cls) => e('svg', { viewBox: "0 0 24 24", className: cls, fill: "currentColor" },
+                e('path', { d: "M18.36 5.64c-1.63-1.63-4.52-1.12-6.57.94l-7.3 7.3c-.93.93-1.2 2.37-.58 3.52.4.76 1.14 1.25 1.97 1.34 2.14.22 4.19-1.26 4.9-3.28l.23-.65 7.3-7.3c2.06-2.05 2.57-4.94.94-6.57z" }),
+                e('path', { d: "M3.5 19.5L2 22l2.5-1.5z", fill: "#fef08a" })
+            )
+        ];
+
+        // ─── StellaraGrid (Match-3 game) ──────────────────────────────────────────
+        const BOARD_COLS       = 8;
+        const BOARD_SIZE       = BOARD_COLS * BOARD_COLS;
+        const TILE_TYPE_COUNT  = 6;
+        const MATCH_SCORE      = 150;
+        const MATCH_XP         = 15;
+        const INITIAL_POINTS   = 8200;
+
+        const StellaraGrid = ({ onScoreUpdate }) => {
+            const [board,     setBoard]     = useState([]);
+            const [selected,  setSelected]  = useState(null);
+            const [gameScore, setGameScore] = useState(0);
+
+            useEffect(() => {
+                setBoard(Array.from({ length: BOARD_SIZE }, () => Math.floor(Math.random() * TILE_TYPE_COUNT)));
+            }, []);
+
+            const handleTile = (idx) => {
+                if (selected === null) {
+                    setSelected(idx);
+                } else {
+                    const sameRow  = Math.floor(selected / BOARD_COLS) === Math.floor(idx / BOARD_COLS);
+                    const adjacent =
+                        (idx === selected - 1 && sameRow) ||
+                        (idx === selected + 1 && sameRow) ||
+                        idx === selected - BOARD_COLS ||
+                        idx === selected + BOARD_COLS;
+
+                    if (adjacent) {
+                        const nb   = [...board];
+                        const prev = selected;
+                        [nb[prev], nb[idx]] = [nb[idx], nb[prev]];
+                        setBoard(nb);
+                        setSelected(null);
+                        setTimeout(() => {
+                            setGameScore(s => s + MATCH_SCORE);
+                            onScoreUpdate && onScoreUpdate(MATCH_XP);
+                            const rb = [...nb];
+                            rb[prev] = Math.floor(Math.random() * TILE_TYPE_COUNT);
+                            rb[idx]  = Math.floor(Math.random() * TILE_TYPE_COUNT);
+                            setBoard(rb);
+                        }, 400);
+                    } else {
+                        setSelected(idx);
+                    }
+                }
+            };
+
+            return e('div', { className: "flex-1 flex flex-col items-center justify-center p-4 animate-in fade-in pb-32 overflow-y-auto" },
+                e('div', { className: "text-center mb-6" },
+                    e('h2', { className: "text-3xl font-black text-white uppercase tracking-tighter" }, "Stellara_Grid"),
+                    e('span', {
+                        className: "inline-block text-[10px] text-amber-500 uppercase tracking-[0.4em] font-bold bg-amber-500/10 px-4 py-1 rounded-full border border-amber-500/20 mt-2"
+                    }, `Session Score: ${gameScore}`)
+                ),
+                e('div', { className: "bg-slate-950 p-3 rounded-[2rem] border border-slate-700 shadow-2xl" },
+                    e('div', {
+                        style: {
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${BOARD_COLS}, 1fr)`,
+                            gap: "4px",
+                            width: "min(320px, 88vw)",
+                            height: "min(320px, 88vw)"
+                        }
+                    },
+                        ...board.map((type, i) => {
+                            const isSel = selected === i;
+                            return e('div', {
+                                key: i,
+                                onClick: () => handleTile(i),
+                                className: `flex items-center justify-center bg-slate-800/80 rounded-lg cursor-pointer border-2 transition-all duration-200 overflow-hidden ${isSel ? 'border-amber-400 scale-110 z-10' : 'border-slate-700 hover:border-slate-500'}`
+                            },
+                                e('div', { className: `w-3/4 h-3/4 ${TILE_COLORS[type] || 'text-slate-400'}` },
+                                    TileSVGs[type] ? TileSVGs[type]("w-full h-full") : null
+                                )
+                            );
+                        })
+                    )
+                ),
+                e('p', { className: "text-[9px] text-slate-500 uppercase tracking-widest mt-6 italic text-center max-w-xs" },
+                    "Select a tile, then tap an adjacent tile to swap and align the Stellara sequence."
+                )
+            );
+        };
+
         // ─── NavBtn ───────────────────────────────────────────────────────────────
         const NavBtn = ({ active, icon: Icon, label, onClick }) =>
             e('button', {
@@ -172,29 +313,29 @@
 
         // ─── App ──────────────────────────────────────────────────────────────────
         const App = () => {
-            const [view,            setView]            = useState('overworld');
+            const [view,            setView]            = useState('arcade');
             const [user,            setUser]            = useState(null);
-            const [points,          setPoints]          = useState(7200);
+            const [points,          setPoints]          = useState(INITIAL_POINTS);
             const [battery,         setBattery]         = useState(null);
-            const [unlockedNodes,   setUnlockedNodes]   = useState(['tpa_node', 'matrix_node']);
+            const [unlockedNodes,   setUnlockedNodes]   = useState(['tpa_node', 'mnl_gateway', 'match3_node']);
             const [certificates,    setCertificates]    = useState([]);
             const [terminalHistory, setTerminalHistory] = useState([
-                '[ARCADE OS] Terminal initialized.',
-                'Type "help" for commands.'
+                '[GAMIFIED LEARNING] OS v14.0 // Stellara Linked.',
+                'Brand Assets Verified. Type "help" for commands.'
             ]);
             const [termInput,       setTermInput]       = useState('');
             const [installPrompt,   setInstallPrompt]   = useState(null);
 
             const terminalRef = useRef(null);
-            const identity    = "GUARDIAN_82";
+            const identity    = "GUARDIAN_82 // GAMIFIED_LEARNING_ARCHITECT";
 
             // ── Arcade node map ──────────────────────────────────────────────────
             const arcadeNodes = [
-                { id: 'tpa_node',     name: 'Tampa HQ',     x: '20%', y: '40%', type: 'hub',     icon: MapPin  },
-                { id: 'matrix_node',  name: 'Matrix Match', x: '45%', y: '30%', type: 'game',    icon: Zap     },
-                { id: 'neon_node',    name: 'Neon Leap',    x: '70%', y: '50%', type: 'game',    icon: Rocket  },
-                { id: 'mystery_node', name: 'Seven Stars',  x: '50%', y: '75%', type: 'mystery', icon: Star    },
-                { id: 'future_node',  name: 'Locked Shard', x: '80%', y: '20%', type: 'locked',  icon: Unlock  }
+                { id: 'tpa_node',     name: 'Tampa HQ',      x: '20%', y: '40%', type: 'hub',     icon: MapPin,   color: '#3b82f6' },
+                { id: 'match3_node',  name: 'Stellara_Grid',  x: '45%', y: '30%', type: 'game',    icon: Gamepad2, color: '#fbbf24' },
+                { id: 'neon_node',    name: 'Neon Leap',      x: '70%', y: '50%', type: 'game',    icon: Rocket,   color: '#0ea5e9' },
+                { id: 'mystery_node', name: 'Seven Stars',    x: '50%', y: '75%', type: 'mystery', icon: Star,     color: '#fbbf24' },
+                { id: 'mnl_gateway',  name: 'Manilla B06',    x: '80%', y: '20%', type: 'hub',     icon: Globe,    color: '#8b5cf6' }
             ];
 
             // ── Firebase auth ────────────────────────────────────────────────────
@@ -259,7 +400,7 @@
                 logTerm(clean);
                 switch (clean) {
                     case 'help':
-                        logTerm("Commands: stats, map, unlock, clear, bio, whoami");
+                        logTerm("Commands: stats, map, arcade, unlock, clear, bio, whoami");
                         break;
                     case 'stats':
                         logTerm(`Points: ${points} | Nodes: ${unlockedNodes.length} | Battery: ${battery !== null ? battery + '%' : 'N/A'}`);
@@ -268,14 +409,18 @@
                         setView('overworld');
                         logTerm("Switching to Overworld view...");
                         break;
+                    case 'arcade':
+                        setView('arcade');
+                        logTerm("Loading Stellara_Grid...");
+                        break;
                     case 'clear':
-                        setTerminalHistory(['[ARCADE OS] Terminal Reset.']);
+                        setTerminalHistory(['[GAMIFIED LEARNING] Terminal Reset.']);
                         break;
                     case 'whoami':
-                        logTerm("Guardian 82 // Efficiency Architect // Stellara Candidate");
+                        logTerm("Guardian 82 // Gamified Learning Architect // Stellara Candidate");
                         break;
                     case 'bio':
-                        logTerm("Managing technical debt through Stellara-inspired automation.");
+                        logTerm("Pioneering the intersection of technical infrastructure and gamified learning.");
                         break;
                     case 'unlock':
                         unlockFeature('neon_node');
@@ -310,16 +455,17 @@
                     }),
                     e('div', { className: "relative w-full max-w-lg aspect-square bg-blue-900/5 border border-blue-500/20 rounded-[4rem] shadow-[0_0_100px_rgba(30,58,138,0.3)]" },
                         e('h2', { className: "absolute top-8 left-0 right-0 text-center text-blue-400 font-black uppercase text-xs tracking-[0.5em]" },
-                            "Stellara_Matrix_Map"
+                            "Stellara_Matrix_v14"
                         ),
                         ...arcadeNodes.map(node => {
                             const isUnlocked = unlockedNodes.includes(node.id) || node.type === 'hub';
                             const NodeIcon   = node.icon;
                             const handleClick = () => {
                                 if (!isUnlocked) { logTerm("Node is encrypted."); return; }
-                                if (node.type === 'hub')         setView('workspace');
-                                else if (node.type === 'mystery') setView('downloads');
-                                else                              setView('terminal');
+                                if (node.id === 'match3_node')     setView('arcade');
+                                else if (node.type === 'hub')      setView('workspace');
+                                else if (node.type === 'mystery')  setView('downloads');
+                                else                               setView('terminal');
                             };
                             return e('div', {
                                 key: node.id,
@@ -331,7 +477,7 @@
                                     e('div', { className: `w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all ${isUnlocked ? 'bg-black border-blue-500 shadow-[0_0_20px_#3b82f640] scale-110' : 'bg-slate-900 border-white/5 opacity-40 scale-90 grayscale'}` },
                                         node.id === 'mystery_node'
                                             ? e(SovereignStar, { size: 24, color: isUnlocked ? "#fbbf24" : "#475569" })
-                                            : e(NodeIcon, { size: 22, className: isUnlocked ? "text-blue-400" : "text-slate-600" })
+                                            : e(NodeIcon, { size: 22, style: { color: isUnlocked ? node.color : '#1e293b' } })
                                     ),
                                     e('span', { className: `mt-2 text-[8px] font-black uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded bg-black/80 border border-white/5 ${isUnlocked ? 'text-white' : 'text-slate-700'}` },
                                         node.name
@@ -373,7 +519,7 @@
                             )
                         ),
                         e('div', { className: "flex items-center gap-3 border-t border-white/10 pt-4" },
-                            e('span', { className: "text-blue-500 font-black uppercase" }, "Guardian@Nexus:~$"),
+                            e('span', { className: "text-blue-500 font-black uppercase" }, "Guardian@GamifiedLearning:~$"),
                             e('input', {
                                 autoFocus: true,
                                 value: termInput,
@@ -520,14 +666,20 @@
                 /* HUD HEADER */
                 e('nav', { className: "h-14 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[80] backdrop-blur-2xl flex-shrink-0" },
                     e('div', { className: "flex items-center gap-3 cursor-pointer", onClick: () => setView('overworld') },
-                        e(SovereignStar, { size: 22 }),
-                        e('h1', { className: "text-white font-black text-[10px] uppercase tracking-[0.2em]" }, "Nexus_Arcade")
+                        e(GamifiedLogo, { size: 28 }),
+                        e('div', { className: "flex flex-col" },
+                            e('h1', { className: "text-white font-black text-[10px] uppercase tracking-[0.2em] leading-none" }, "Gamified_Learning.org"),
+                            e('span', { className: "text-[8px] text-blue-500 font-bold uppercase tracking-widest mt-0.5" }, "OS v14.0 // Stellara")
+                        )
                     ),
                     e('div', { className: "flex items-center gap-3" },
                         installPrompt && e('button', {
                             onClick: handleInstall,
                             className: "bg-blue-600 hover:bg-blue-500 active:scale-95 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all"
                         }, "Install App"),
+                        e('div', { className: "bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-2" },
+                            e('span', { className: "text-[10px] font-black text-amber-400 font-mono" }, `${points} XP`)
+                        ),
                         e('div', { className: "bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-2" },
                             e(BatteryFull, { size: 12, className: "text-emerald-500" }),
                             e('span', { className: "text-[10px] font-black text-white font-mono" }, `${battery !== null ? battery : '--'}%`)
@@ -537,19 +689,20 @@
 
                 /* VIEWPORT */
                 e('main', { className: "flex-1 relative flex overflow-hidden w-full" },
-                    view === 'overworld'                       && e(OverworldMap),
-                    (view === 'terminal' || view === 'arcade') && e(ArcadeTerminal),
-                    view === 'downloads'                       && e(DownloadsView),
-                    view === 'profile'                         && e(ProfileView),
-                    view === 'workspace'                       && e(WorkspaceView)
+                    view === 'overworld'  && e(OverworldMap),
+                    view === 'arcade'     && e(StellaraGrid, { onScoreUpdate: (xp) => setPoints(p => p + xp) }),
+                    view === 'terminal'   && e(ArcadeTerminal),
+                    view === 'downloads'  && e(DownloadsView),
+                    view === 'profile'    && e(ProfileView),
+                    view === 'workspace'  && e(WorkspaceView)
                 ),
 
                 /* NAVIGATION DOCK (Thumb-Safe) */
                 e('div', { className: "h-20 border-t border-white/5 bg-black/95 flex items-center justify-around px-4 z-[80] backdrop-blur-2xl flex-shrink-0" },
-                    e(NavBtn, { active: view === 'overworld',                      icon: MapIcon,  label: "Map",      onClick: () => setView('overworld') }),
-                    e(NavBtn, { active: view === 'terminal' || view === 'arcade',  icon: TermIcon, label: "Terminal", onClick: () => setView('terminal')  }),
-                    e(NavBtn, { active: view === 'downloads',                      icon: Download, label: "Vault",    onClick: () => setView('downloads') }),
-                    e(NavBtn, { active: view === 'profile',                        icon: User,     label: "Profile",  onClick: () => setView('profile')   })
+                    e(NavBtn, { active: view === 'overworld',  icon: MapIcon,  label: "Map",      onClick: () => setView('overworld') }),
+                    e(NavBtn, { active: view === 'arcade',     icon: Gamepad2, label: "Arcade",   onClick: () => setView('arcade')    }),
+                    e(NavBtn, { active: view === 'downloads',  icon: Download, label: "Vault",    onClick: () => setView('downloads') }),
+                    e(NavBtn, { active: view === 'profile',    icon: User,     label: "Profile",  onClick: () => setView('profile')   })
                 )
             );
         };

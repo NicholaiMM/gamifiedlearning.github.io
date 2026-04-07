@@ -1,7 +1,7 @@
 {
-  "name": "Nexus Arcade",
-  "short_name": "NexusArcade",
-  "description": "Gamified learning platform for developers – unlock nodes, earn XP, and level up.",
+  "name": "Gamified Learning",
+  "short_name": "GamifiedLearning",
+  "description": "Gamified Learning – educational platform with arcade games, XP nodes, and Stellara Match-3.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
