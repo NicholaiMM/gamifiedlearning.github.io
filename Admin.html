@@ -1,65 +1,136 @@
-<section id="module-sandbox" class="nexus-card p-8 locked">
-    <h2 class="text-3xl mb-2 text-blue-400">MODULE_02: ARCHITECT SANDBOX</h2>
-    <p class="text-sm uppercase mb-6 text-gray-500">Requires Module_01 Validation</p>
-    
-    <div class="sandbox-grid">
-        <div class="p-6 border border-green-900 bg-black/50">
-            <h4 class="mb-2 text-white">SECURITY DECRYPTION</h4>
-            <div id="game-terminal" class="font-mono text-xs mb-4 h-20 overflow-hidden opacity-80">
-                // SYSTEM READY...
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Nexus Arcade — Architect Sandbox</title>
+    <meta name="description" content="Nexus Arcade Admin — Module 02 Architect Sandbox and scholarship mission tracker.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #020502; color: #00ff41; font-family: monospace; }
+        .nexus-card {
+            background: rgba(0, 15, 0, 0.95);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .sandbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 640px) { .sandbox-grid { grid-template-columns: 1fr; } }
+        .locked { opacity: 0.85; }
+        #game-terminal { background: #000; padding: 8px; border: 1px solid #1a4a1a; color: #00ff41; }
+        .back-link { color: #00aaff; text-decoration: none; font-size: 0.75rem; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="min-h-screen p-6">
+
+    <div class="max-w-3xl mx-auto">
+        <nav class="mb-6">
+            <a href="index.html" class="back-link">← Back to Nexus Arcade</a>
+        </nav>
+
+        <section id="module-sandbox" class="nexus-card p-8 locked rounded-lg mb-6">
+            <h2 class="text-3xl mb-2 text-blue-400">MODULE_02: ARCHITECT SANDBOX</h2>
+            <p class="text-sm uppercase mb-6 text-gray-500">Requires Module_01 Validation</p>
+
+            <div class="sandbox-grid">
+                <div class="p-6 border border-green-900 bg-black/50">
+                    <h4 class="mb-2 text-white">SECURITY DECRYPTION</h4>
+                    <div id="game-terminal" class="font-mono text-xs mb-4 h-20 overflow-hidden opacity-80">
+                        // SYSTEM READY...
+                    </div>
+                    <button id="start-decrypt" onclick="startMiniGame()" class="text-xs border border-blue-500 px-4 py-1 hover:bg-blue-500/20 cursor-pointer transition-colors">
+                        START BOUNTY
+                    </button>
+                </div>
+
+                <div class="p-6 border border-gray-800 opacity-50">
+                    <h4 class="mb-2">CODE SIMULATION</h4>
+                    <p class="text-xs">[ LOCKED: PHASE 3 ]</p>
+                </div>
             </div>
-            <button id="start-decrypt" onclick="startMiniGame()" class="text-xs border border-blue-500 px-4 py-1 hover:bg-blue-500/20">
-                START BOUNTY
-            </button>
-        </div>
+        </section>
 
-        <div class="p-6 border border-gray-800 opacity-50">
-            <h4 class="mb-2">CODE SIMULATION</h4>
-            <p class="text-xs">[ LOCKED: PHASE 3 ]</p>
+        <div id="mission-status" style="padding: 20px; background: #1a1a1a; color: #00ffcc; border: 1px solid #333; font-family: monospace;" class="rounded-lg">
+            <h3 class="text-lg font-bold mb-2">Step 1: The Legend of the Seven Stars</h3>
+            <p id="story-text">Loading the ancient blueprints...</p>
+
+            <hr style="border-color: #333; margin: 12px 0;">
+
+            <h4 class="font-bold mb-2">Global Scholarship Progress</h4>
+            <div style="background: #333; width: 100%; height: 20px; border-radius: 10px; overflow: hidden;">
+                <div id="progress-bar" style="background: #00ffcc; width: 0%; height: 100%; border-radius: 10px; transition: width 1s;"></div>
+            </div>
+            <p class="mt-2">Current Goal: <span id="kit-count">0</span>/1 Chromebook Kits for Students</p>
+            <p id="donor-shoutout" style="font-style: italic; color: #ffcc00;"></p>
         </div>
     </div>
-</section><div id="mission-status" style="padding: 20px; background: #1a1a1a; color: #00ffcc; border: 1px solid #333; margin-top: 20px; font-family: monospace;">
-    <h3>Step 1: The Legend of the Seven Stars</h3>
-    <p id="story-text">Loading the ancient blueprints...</p>
-    
-    <hr style="border-color: #333;">
-    
-    <h4>Global Scholarship Progress</h4>
-    <div style="background: #333; width: 100%; height: 20px; border-radius: 10px;">
-        <div id="progress-bar" style="background: #00ffcc; width: 0%; height: 100%; border-radius: 10px; transition: width 1s;"></div>
-    </div>
-    <p>Current Goal: <span id="kit-count">0</span>/1 Chromebook Kits for Students</p>
-    <p id="donor-shoutout" style="font-style: italic; color: #ffcc00;"></p>
-</div>
 
-<script>
-// Logic for Tracking and "Easter Egg" Sensors
-const missionData = {
-    totalDonated: 0, // This will pull from your Master Ledger via API later
-    firstDonorName: "Waiting for Hero...",
-    scholarshipGoal: 50 // $50 for a used Chromebook
-};
+    <script>
+    // Logic for Tracking and "Easter Egg" Sensors
+    const missionData = {
+        totalDonated: 0, // This will pull from your Master Ledger via API later
+        firstDonorName: "Waiting for Hero...",
+        scholarshipGoal: 50 // $50 for a used Chromebook
+    };
 
-function updateMission() {
-    const progress = (missionData.totalDonated / missionData.scholarshipGoal) * 100;
-    document.getElementById('progress-bar').style.width = Math.min(progress, 100) + "%";
-    
-    if (missionData.totalDonated >= 300) {
-        document.getElementById('story-text').innerHTML = "<strong>HIDDEN FEATURE UNLOCKED:</strong> Ozone Sensor Access Granted. Check your email for shipping details.";
-    } else {
-        document.getElementById('story-text').innerText = "The Seven Stars represent the ethics of code. Help a student to unlock the next level.";
+    function updateMission() {
+        const progress = (missionData.totalDonated / missionData.scholarshipGoal) * 100;
+        document.getElementById('progress-bar').style.width = Math.min(progress, 100) + "%";
+
+        if (missionData.totalDonated >= 300) {
+            document.getElementById('story-text').innerHTML = "<strong>HIDDEN FEATURE UNLOCKED:</strong> Ozone Sensor Access Granted. Check your email for shipping details.";
+        } else {
+            document.getElementById('story-text').innerText = "The Seven Stars represent the ethics of code. Help a student to unlock the next level.";
+        }
     }
-}
 
-// Milestone Notification Trigger (Simulated for testing)
-function checkMilestone(amount) {
-    if (amount >= 50) {
-        console.log("Milestone Reached: Sending Email to General...");
-        // This triggers your Apps Script function
+    // Milestone Notification Trigger (Simulated for testing)
+    function checkMilestone(amount) {
+        if (amount >= 50) {
+            console.log("Milestone Reached: Sending Email to General...");
+            // This triggers your Apps Script function
+        }
     }
-}
 
-updateMission();
-</script>
+    // Security Decryption Mini-Game
+    function startMiniGame() {
+        const terminal = document.getElementById('game-terminal');
+        const btn = document.getElementById('start-decrypt');
+        btn.disabled = true;
+        btn.setAttribute('aria-busy', 'true');
+        btn.textContent = 'DECRYPTING...';
 
+        const lines = [
+            '> Initializing decrypt sequence...',
+            '> Scanning node matrix...',
+            '> Pattern: [████░░░░] 40%',
+            '> Pattern: [████████] 80%',
+            '> DECRYPTION COMPLETE.',
+            '> Access granted. Welcome, Architect.'
+        ];
 
+        let i = 0;
+        terminal.textContent = '';
+        const interval = setInterval(function () {
+            if (i < lines.length) {
+                terminal.textContent += lines[i] + '\n';
+                terminal.scrollTop = terminal.scrollHeight;
+                i++;
+            } else {
+                clearInterval(interval);
+                btn.textContent = 'BOUNTY CLAIMED';
+                btn.removeAttribute('aria-busy');
+                missionData.totalDonated += 50;
+                updateMission();
+                checkMilestone(missionData.totalDonated);
+            }
+        }, 500);
+    }
+
+    updateMission();
+    </script>
+
+</body>
+</html>

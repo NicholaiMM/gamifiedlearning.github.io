@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Nexus Arcade v12.9</title>
+    <meta name="description" content="Nexus Arcade — a gamified learning platform with an overworld map, arcade terminal, vault, and DevOps workspace.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌟</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -13,15 +15,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-    <!-- React 18 -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- React 18 (pinned patch version for stability) -->
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
 
     <!-- Lucide React Icons (UMD) -->
     <script src="https://unpkg.com/lucide-react@0.309.0/dist/umd/lucide-react.min.js"></script>
 
-    <!-- Babel Standalone for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Babel Standalone for JSX (pinned for stability) -->
+    <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; background: #020202; }
@@ -55,9 +57,18 @@
     </style>
 </head>
 <body class="overflow-hidden">
+    <noscript>
+        <div style="background:#020202;color:#00ff41;font-family:monospace;padding:2rem;text-align:center;">
+            <strong>JavaScript is required</strong> to run Nexus Arcade.<br>
+            Please enable JavaScript in your browser settings.
+        </div>
+    </noscript>
     <div id="root"></div>
 
-    <!-- App-level globals (replace with real Firebase config for production) -->
+    <!-- Firebase config — replace placeholder values with your real Firebase project credentials.
+         Get them from: Firebase Console → Project Settings → Your apps → SDK setup.
+         Auth, Firestore, and analytics work only with valid credentials.
+         With placeholder values the app runs in offline/demo mode (auth silently skipped). -->
     <script>
         window.__firebase_config = JSON.stringify({
             apiKey: "AIzaSyDemo-GamifiedLearning",
@@ -75,13 +86,25 @@
         // ─── React hooks ──────────────────────────────────────────────────────────
         const { useState, useEffect, useRef } = React;
 
-        // ─── Lucide icons ─────────────────────────────────────────────────────────
-        const {
-            MapPin, Zap, Rocket, Star, Unlock,
-            BatteryFull, AlertTriangle, CheckCircle2, Download,
-            Layout, Code2, FileText, User, TerminalSquare,
-            Map: MapIcon, Terminal: TermIcon
-        } = LucideReact;
+        // ─── Lucide icons (with fallback if CDN fails to load) ───────────────────
+        const _icons = (typeof LucideReact !== 'undefined') ? LucideReact : {};
+        const _icon = (name) => _icons[name] || (() => null);
+        const MapPin        = _icon('MapPin');
+        const Zap           = _icon('Zap');
+        const Rocket        = _icon('Rocket');
+        const Star          = _icon('Star');
+        const Unlock        = _icon('Unlock');
+        const BatteryFull   = _icon('BatteryFull');
+        const AlertTriangle = _icon('AlertTriangle');
+        const CheckCircle2  = _icon('CheckCircle2');
+        const Download      = _icon('Download');
+        const Layout        = _icon('Layout');
+        const Code2         = _icon('Code2');
+        const FileText      = _icon('FileText');
+        const User          = _icon('User');
+        const TerminalSquare = _icon('TerminalSquare');
+        const MapIcon       = _icon('Map');
+        const TermIcon      = _icon('Terminal');
 
         // ─── Firebase (compat) ────────────────────────────────────────────────────
         let firebaseApp, auth, db;
@@ -459,6 +482,16 @@
                                 <div>
                                     <p className="text-[9px] font-black text-white uppercase">Master_Resume.md</p>
                                     <p className="text-[8px] text-slate-500 mt-1">Team-based efficiency calibrated.</p>
+                                </div>
+                            </a>
+                            <a
+                                href="Admin.html"
+                                className="p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-start gap-3 transition-all"
+                            >
+                                <TerminalSquare size={16} className="text-slate-400 mt-0.5 flex-shrink-0" />
+                                <div>
+                                    <p className="text-[9px] font-black text-white uppercase">Admin_Sandbox</p>
+                                    <p className="text-[8px] text-slate-500 mt-1">Module 02 Architect Sandbox.</p>
                                 </div>
                             </a>
                         </div>
