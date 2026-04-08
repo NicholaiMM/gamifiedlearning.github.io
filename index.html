@@ -3,82 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>Amazing Grace Home Living</title>
-  <meta name="description" content="Affordable, peaceful rooms in Tampa &amp; Largo – Amazing Grace Home Living.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="manifest" href="manifest.json">
+  <title>Portfolio Hub</title>
+  <meta name="description" content="Portfolio Hub – Amazing Grace Home Living and Gamify Learning.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="assets/manifest.json">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
   <!-- ── Header ──────────────────────────────────────── -->
   <header class="hub-header">
-    <h1>🏡 Amazing Grace Home Living</h1>
-    <p>Affordable, peaceful rooms in Tampa &amp; Largo</p>
+    <h1>✦ Portfolio Hub</h1>
+    <p>Choose a site to visit</p>
   </header>
 
-  <!-- ── Navigation ──────────────────────────────────── -->
-  <nav class="hub-nav" aria-label="Site navigation">
-    <a href="index.html">Home</a>
-    <a href="home-living/">Home Living</a>
-    <a href="arcade/">Arcade</a>
-    <a href="camp/">Camp</a>
-  </nav>
-
-  <!-- ── Room Cards ──────────────────────────────────── -->
+  <!-- ── Card Grid ────────────────────────────────────── -->
   <main class="hub-grid" role="main">
 
-    <div class="card" tabindex="0"
-         data-src="home-living/"
-         data-label="Amazing Grace Home Living"
-         aria-label="View Amazing Grace Home Living details">
-      <div class="card-icon">🏠</div>
-      <div class="card-title">Tampa Room</div>
-      <div class="card-tag">$850 / mo</div>
-      <p class="card-desc">926 E Poinsettia Ave, Tampa, FL 33612</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="home-living/"
-         data-label="Amazing Grace Home Living – Largo"
-         aria-label="View Largo room details">
+    <a class="card" href="amazinggracehomeliving/"
+       aria-label="Visit Amazing Grace Home Living">
       <div class="card-icon">🏡</div>
-      <div class="card-title">Largo Room</div>
-      <div class="card-tag">$1,000 / mo</div>
-      <p class="card-desc">1142 7th St NW, Largo, FL 33770</p>
-    </div>
+      <div class="card-title">Amazing Grace</div>
+      <div class="card-tag">Home Living</div>
+      <p class="card-desc">Affordable, peaceful rooms in Tampa &amp; Largo. Schedule a tour today.</p>
+    </a>
+
+    <a class="card" href="gamifylearning/"
+       aria-label="Visit Gamify Learning">
+      <div class="card-icon">🎓</div>
+      <div class="card-title">Gamify Learning</div>
+      <div class="card-tag">Education</div>
+      <p class="card-desc">An educational arcade platform — sermons, Bible Journey, and interactive tools.</p>
+    </a>
 
   </main>
 
-  <!-- ── Schedule a Tour ─────────────────────────────── -->
-  <section class="hub-cta">
-    <h2>Schedule a Tour</h2>
-    <p>Contact Sheila at <a href="mailto:gulfnexus@gmail.com">gulfnexus@gmail.com</a></p>
-  </section>
-
   <!-- ── Footer ───────────────────────────────────────── -->
   <footer class="hub-footer">
-    &copy; 2025 Amazing Grace Home Living
+    &copy; 2025 Portfolio Hub
   </footer>
-
-  <script>
-    (function () {
-      'use strict';
-
-      // Card clicks navigate to sub-page
-      document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', () => {
-          window.location.href = card.dataset.src;
-        });
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            window.location.href = card.dataset.src;
-          }
-        });
-      });
-    }());
-  </script>
 
 </body>
 </html>
