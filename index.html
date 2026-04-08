@@ -4,127 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio Hub</title>
-  <meta name="description" content="Portfolio Hub – Amazing Grace Home Living, Voice of Jesus Ministries, The Seven Stars, Bible Journey.">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
+  <meta name="description" content="Portfolio Hub – Amazing Grace Home Living and Gamify Learning.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="assets/manifest.json">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
   <!-- ── Header ──────────────────────────────────────── -->
   <header class="hub-header">
     <h1>✦ Portfolio Hub</h1>
-    <p>Select a module to launch</p>
+    <p>Choose a site to visit</p>
   </header>
 
   <!-- ── Card Grid ────────────────────────────────────── -->
   <main class="hub-grid" role="main">
 
-    <div class="card" tabindex="0"
-         data-src="./home-living/index.html"
-         data-label="Amazing Grace Home Living"
-         aria-label="Open Amazing Grace Home Living module">
+    <a class="card" href="amazinggracehomeliving/"
+       aria-label="Visit Amazing Grace Home Living">
       <div class="card-icon">🏡</div>
       <div class="card-title">Amazing Grace</div>
-      <div class="card-tag">Business</div>
-      <p class="card-desc">Home Living services — scheduling, client support, and professional care.</p>
-    </div>
+      <div class="card-tag">Home Living</div>
+      <p class="card-desc">Affordable, peaceful rooms in Tampa &amp; Largo. Schedule a tour today.</p>
+    </a>
 
-    <div class="card" tabindex="0"
-         data-src="./ministries/index.html"
-         data-label="Voice of Jesus Ministries"
-         aria-label="Open Voice of Jesus Ministries module">
-      <div class="card-icon">🕊️</div>
-      <div class="card-title">Voice of Jesus</div>
-      <div class="card-tag">Non-Profit</div>
-      <p class="card-desc">Ministries media portal — sermons, videos, and resource library.</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="./mystery/index.html"
-         data-label="The Seven Stars – Diagnostic Tool"
-         aria-label="Open The Seven Stars diagnostic game">
-      <div class="card-icon">⭐</div>
-      <div class="card-title">The Seven Stars</div>
-      <div class="card-tag">Diagnostic Tool</div>
-      <p class="card-desc">Decrypt the cipher with a Match-3 puzzle. Uncover the truth when you reach 1,000 pts.</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="./bible/index.html"
-         data-label="Bible Journey – Educational App"
-         aria-label="Open Bible Journey educational app">
-      <div class="card-icon">📖</div>
-      <div class="card-title">Bible Journey</div>
+    <a class="card" href="gamifylearning/"
+       aria-label="Visit Gamify Learning">
+      <div class="card-icon">🎓</div>
+      <div class="card-title">Gamify Learning</div>
       <div class="card-tag">Education</div>
-      <p class="card-desc">Progress through Genesis, Exodus, and the Gospels with interactive quizzes.</p>
-    </div>
+      <p class="card-desc">An educational arcade platform — sermons, Bible Journey, and interactive tools.</p>
+    </a>
 
   </main>
 
-  <!-- ── Iframe Overlay ───────────────────────────────── -->
-  <div id="overlay" role="dialog" aria-modal="true" aria-label="App viewer">
-    <div class="overlay-bar">
-      <span class="overlay-title" id="overlay-label">Loading…</span>
-      <button class="overlay-close" id="overlay-close" aria-label="Close app viewer">✕ Close</button>
-    </div>
-    <iframe id="app-frame" title="App viewer" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
-  </div>
-
   <!-- ── Footer ───────────────────────────────────────── -->
   <footer class="hub-footer">
-    &copy; 2025 Portfolio Hub &mdash; Built with Vanilla JS &amp; CSS3
+    &copy; 2025 Portfolio Hub
   </footer>
-
-  <script>
-    (function () {
-      'use strict';
-
-      const overlay = document.getElementById('overlay');
-      const frame   = document.getElementById('app-frame');
-      const label   = document.getElementById('overlay-label');
-      const btnClose = document.getElementById('overlay-close');
-
-      function openApp(src, appLabel) {
-        frame.src = src;
-        label.textContent = appLabel;
-        overlay.classList.add('active');
-        overlay.focus();
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeApp() {
-        overlay.classList.remove('active');
-        frame.src = '';
-        document.body.style.overflow = '';
-      }
-
-      // Card clicks / keyboard
-      document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('click', () => {
-          openApp(card.dataset.src, card.dataset.label);
-        });
-        card.addEventListener('keydown', e => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openApp(card.dataset.src, card.dataset.label);
-          }
-        });
-      });
-
-      // Close button
-      btnClose.addEventListener('click', closeApp);
-
-      // Escape key
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeApp();
-      });
-
-      // Click outside iframe bar
-      overlay.addEventListener('click', e => {
-        if (e.target === overlay) closeApp();
-      });
-    }());
-  </script>
 
 </body>
 </html>
