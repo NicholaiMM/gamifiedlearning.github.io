@@ -3,125 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio Hub</title>
-  <meta name="description" content="Portfolio Hub – Amazing Grace Home Living, Voice of Jesus Ministries, The Seven Stars, Bible Journey.">
-  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="style.css">
+  <title>Amazing Grace Home Living</title>
+  <meta name="description" content="Affordable, peaceful rooms in Tampa &amp; Largo – Amazing Grace Home Living.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
   <!-- ── Header ──────────────────────────────────────── -->
   <header class="hub-header">
-    <h1>✦ Portfolio Hub</h1>
-    <p>Select a module to launch</p>
+    <h1>🏡 Amazing Grace Home Living</h1>
+    <p>Affordable, peaceful rooms in Tampa &amp; Largo</p>
   </header>
 
-  <!-- ── Card Grid ────────────────────────────────────── -->
+  <!-- ── Navigation ──────────────────────────────────── -->
+  <nav class="hub-nav" aria-label="Site navigation">
+    <a href="index.html">Home</a>
+    <a href="home-living/">Home Living</a>
+    <a href="arcade/">Arcade</a>
+    <a href="camp/">Camp</a>
+  </nav>
+
+  <!-- ── Room Cards ──────────────────────────────────── -->
   <main class="hub-grid" role="main">
 
     <div class="card" tabindex="0"
-         data-src="./home-living/index.html"
+         data-src="home-living/"
          data-label="Amazing Grace Home Living"
-         aria-label="Open Amazing Grace Home Living module">
+         aria-label="View Amazing Grace Home Living details">
+      <div class="card-icon">🏠</div>
+      <div class="card-title">Tampa Room</div>
+      <div class="card-tag">$850 / mo</div>
+      <p class="card-desc">926 E Poinsettia Ave, Tampa, FL 33612</p>
+    </div>
+
+    <div class="card" tabindex="0"
+         data-src="home-living/"
+         data-label="Amazing Grace Home Living – Largo"
+         aria-label="View Largo room details">
       <div class="card-icon">🏡</div>
-      <div class="card-title">Amazing Grace</div>
-      <div class="card-tag">Business</div>
-      <p class="card-desc">Home Living services — scheduling, client support, and professional care.</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="./ministries/index.html"
-         data-label="Voice of Jesus Ministries"
-         aria-label="Open Voice of Jesus Ministries module">
-      <div class="card-icon">🕊️</div>
-      <div class="card-title">Voice of Jesus</div>
-      <div class="card-tag">Non-Profit</div>
-      <p class="card-desc">Ministries media portal — sermons, videos, and resource library.</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="./mystery/index.html"
-         data-label="The Seven Stars – Diagnostic Tool"
-         aria-label="Open The Seven Stars diagnostic game">
-      <div class="card-icon">⭐</div>
-      <div class="card-title">The Seven Stars</div>
-      <div class="card-tag">Diagnostic Tool</div>
-      <p class="card-desc">Decrypt the cipher with a Match-3 puzzle. Uncover the truth when you reach 1,000 pts.</p>
-    </div>
-
-    <div class="card" tabindex="0"
-         data-src="./bible/index.html"
-         data-label="Bible Journey – Educational App"
-         aria-label="Open Bible Journey educational app">
-      <div class="card-icon">📖</div>
-      <div class="card-title">Bible Journey</div>
-      <div class="card-tag">Education</div>
-      <p class="card-desc">Progress through Genesis, Exodus, and the Gospels with interactive quizzes.</p>
+      <div class="card-title">Largo Room</div>
+      <div class="card-tag">$1,000 / mo</div>
+      <p class="card-desc">1142 7th St NW, Largo, FL 33770</p>
     </div>
 
   </main>
 
-  <!-- ── Iframe Overlay ───────────────────────────────── -->
-  <div id="overlay" role="dialog" aria-modal="true" aria-label="App viewer">
-    <div class="overlay-bar">
-      <span class="overlay-title" id="overlay-label">Loading…</span>
-      <button class="overlay-close" id="overlay-close" aria-label="Close app viewer">✕ Close</button>
-    </div>
-    <iframe id="app-frame" title="App viewer" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
-  </div>
+  <!-- ── Schedule a Tour ─────────────────────────────── -->
+  <section class="hub-cta">
+    <h2>Schedule a Tour</h2>
+    <p>Contact Sheila at <a href="mailto:gulfnexus@gmail.com">gulfnexus@gmail.com</a></p>
+  </section>
 
   <!-- ── Footer ───────────────────────────────────────── -->
   <footer class="hub-footer">
-    &copy; 2025 Portfolio Hub &mdash; Built with Vanilla JS &amp; CSS3
+    &copy; 2025 Amazing Grace Home Living
   </footer>
 
   <script>
     (function () {
       'use strict';
 
-      const overlay = document.getElementById('overlay');
-      const frame   = document.getElementById('app-frame');
-      const label   = document.getElementById('overlay-label');
-      const btnClose = document.getElementById('overlay-close');
-
-      function openApp(src, appLabel) {
-        frame.src = src;
-        label.textContent = appLabel;
-        overlay.classList.add('active');
-        overlay.focus();
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeApp() {
-        overlay.classList.remove('active');
-        frame.src = '';
-        document.body.style.overflow = '';
-      }
-
-      // Card clicks / keyboard
+      // Card clicks navigate to sub-page
       document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', () => {
-          openApp(card.dataset.src, card.dataset.label);
+          window.location.href = card.dataset.src;
         });
         card.addEventListener('keydown', e => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            openApp(card.dataset.src, card.dataset.label);
+            window.location.href = card.dataset.src;
           }
         });
-      });
-
-      // Close button
-      btnClose.addEventListener('click', closeApp);
-
-      // Escape key
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && overlay.classList.contains('active')) closeApp();
-      });
-
-      // Click outside iframe bar
-      overlay.addEventListener('click', e => {
-        if (e.target === overlay) closeApp();
       });
     }());
   </script>

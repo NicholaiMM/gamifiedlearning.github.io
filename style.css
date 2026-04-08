@@ -45,6 +45,54 @@ a {
 }
 a:hover { text-decoration: underline; }
 
+/* ── Nav Bar ────────────────────────────────────────────── */
+.hub-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 215, 0, 0.05);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.hub-nav a {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.hub-nav a:hover,
+.hub-nav a:focus-visible {
+  color: var(--gold);
+  background: rgba(255, 215, 0, 0.1);
+  text-decoration: none;
+  outline: none;
+}
+
+/* ── CTA Section ────────────────────────────────────────── */
+.hub-cta {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.hub-cta h2 {
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 0.6rem;
+}
+
+.hub-cta p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
 /* ── Header ─────────────────────────────────────────────── */
 .hub-header {
   text-align: center;
