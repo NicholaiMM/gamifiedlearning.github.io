@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazing Grace Home Living</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #ffd700;
+      --bg:      #0a0a0f;
+      --surface: rgba(255,255,255,0.05);
+      --border:  rgba(255,215,0,0.25);
+      --text:    #e8e8e8;
+      --muted:   #888;
+      --radius:  14px;
+      --blur:    blur(12px);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      background-image:
+        radial-gradient(ellipse at 10% 10%, rgba(255,215,0,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 90%, rgba(255,140,0,0.04) 0%, transparent 55%);
+    }
+
+    /* ── Header ── */
+    .ag-header {
+      background: rgba(255,215,0,0.06);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .ag-header .logo { font-size: 2rem; }
+    .ag-header h1 {
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      color: var(--gold);
+      text-shadow: 0 0 12px rgba(255,215,0,0.35);
+    }
+    .ag-header p { font-size: 0.85rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── Nav Tabs ── */
+    .ag-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1.2rem 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px 8px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      color: var(--gold);
+      border-color: var(--border);
+      background: rgba(255,215,0,0.07);
+    }
+
+    /* ── Content ── */
+    .ag-content { padding: 2rem; max-width: 960px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass card ── */
+    .glass {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .glass h2 {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Schedule form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 0.55rem 0.8rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-group select option { background: #111; }
+
+    .btn-gold {
+      display: inline-block;
+      margin-top: 1rem;
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 1.6rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-gold:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── Service cards ── */
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .service-card {
+      background: rgba(255,215,0,0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      text-align: center;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .service-card:hover { background: rgba(255,215,0,0.1); transform: translateY(-2px); }
+    .service-card .sc-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .service-card .sc-name { font-size: 0.95rem; font-weight: 600; color: var(--gold); }
+    .service-card .sc-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── Support FAQ ── */
+    .faq-item { margin-bottom: 0.8rem; }
+    .faq-item details summary {
+      cursor: pointer;
+      color: var(--gold);
+      font-size: 0.95rem;
+      padding: 0.5rem 0;
+      list-style: none;
+      border-bottom: 1px solid rgba(255,215,0,0.12);
+    }
+    .faq-item details summary::before { content: '▶  '; font-size: 0.7rem; }
+    .faq-item details[open] summary::before { content: '▼  '; }
+    .faq-item details p { padding: 0.7rem 0 0.3rem 1.2rem; color: var(--muted); font-size: 0.88rem; line-height: 1.6; }
+
+    /* ── Toast ── */
+    #ag-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: rgba(255,215,0,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 10px;
+      color: var(--gold);
+      padding: 0.6rem 1.4rem;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    #ag-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="ag-header">
+    <div class="logo">🏡</div>
+    <div>
+      <h1>Amazing Grace Home Living</h1>
+      <p>Professional Home Care &amp; Support Services</p>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="ag-tabs" aria-label="Sections">
+    <button class="tab-btn active" data-tab="services">Our Services</button>
+    <button class="tab-btn" data-tab="schedule">Service Scheduling</button>
+    <button class="tab-btn" data-tab="support">Client Support</button>
+  </nav>
+
+  <!-- Content -->
+  <div class="ag-content">
+
+    <!-- Services Panel -->
+    <section class="tab-panel active" id="tab-services">
+      <div class="glass">
+        <h2>✦ Our Services</h2>
+        <div class="service-grid">
+          <div class="service-card">
+            <div class="sc-icon">🧹</div>
+            <div class="sc-name">Home Cleaning</div>
+            <div class="sc-desc">Thorough, eco-friendly cleaning tailored to your home.</div>
+          </div>
+          <div class="service-card">
+            <div class="sc-icon">🍽️</div>
+            <div class="sc-name">Meal Preparation</div>
+            <div class="sc-desc">Nutritious, personalized meals prepared with care.</div>
+          </div>
+          <div class="service-card">
+            <div class="sc-icon">🧑‍⚕️</div>
+            <div class="sc-name">Personal Care</div>
+            <div class="sc-desc">Compassionate assistance with daily personal routines.</div>
+          </div>
+          <div class="service-card">
+            <div class="sc-icon">🚗</div>
+            <div class="sc-name">Transportation</div>
+            <div class="sc-desc">Safe, reliable rides to appointments and errands.</div>
+          </div>
+          <div class="service-card">
+            <div class="sc-icon">💊</div>
+            <div class="sc-name">Medication Reminders</div>
+            <div class="sc-desc">Timely reminders to maintain your health schedule.</div>
+          </div>
+          <div class="service-card">
+            <div class="sc-icon">🤝</div>
+            <div class="sc-name">Companionship</div>
+            <div class="sc-desc">Friendly company and emotional support every day.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Schedule Panel -->
+    <section class="tab-panel" id="tab-schedule">
+      <div class="glass">
+        <h2>📅 Book a Service</h2>
+        <form id="schedule-form" novalidate>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="s-name">Full Name</label>
+              <input type="text" id="s-name" placeholder="Jane Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="s-phone">Phone Number</label>
+              <input type="tel" id="s-phone" placeholder="(555) 000-0000">
+            </div>
+            <div class="form-group">
+              <label for="s-email">Email Address</label>
+              <input type="email" id="s-email" placeholder="jane@example.com">
+            </div>
+            <div class="form-group">
+              <label for="s-service">Service Type</label>
+              <select id="s-service">
+                <option value="">Select a service…</option>
+                <option>Home Cleaning</option>
+                <option>Meal Preparation</option>
+                <option>Personal Care</option>
+                <option>Transportation</option>
+                <option>Medication Reminders</option>
+                <option>Companionship</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="s-date">Preferred Date</label>
+              <input type="date" id="s-date">
+            </div>
+            <div class="form-group">
+              <label for="s-time">Preferred Time</label>
+              <input type="time" id="s-time">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label for="s-notes">Special Notes</label>
+              <textarea id="s-notes" placeholder="Allergies, special instructions…"></textarea>
+            </div>
+          </div>
+          <button class="btn-gold" type="submit">Request Appointment</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Support Panel -->
+    <section class="tab-panel" id="tab-support">
+      <div class="glass">
+        <h2>💬 Client Support</h2>
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem;">Our care team is here Mon–Fri 8 am–6 pm. For emergencies dial <strong style="color:var(--gold);">1-800-AMAZING</strong>.</p>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="c-name">Your Name</label>
+            <input type="text" id="c-name" placeholder="John Smith">
+          </div>
+          <div class="form-group">
+            <label for="c-email">Email</label>
+            <input type="email" id="c-email" placeholder="john@example.com">
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label for="c-msg">Message</label>
+            <textarea id="c-msg" placeholder="How can we help you today?"></textarea>
+          </div>
+        </div>
+        <button class="btn-gold" id="support-send">Send Message</button>
+      </div>
+
+      <div class="glass">
+        <h2>❓ Frequently Asked Questions</h2>
+        <div class="faq-item">
+          <details>
+            <summary>How do I schedule or modify a service?</summary>
+            <p>Use the Scheduling tab to book new appointments. To modify existing bookings please call our care team directly.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details>
+            <summary>Are your caregivers background-checked?</summary>
+            <p>Yes. All staff undergo thorough background checks, CPR certification, and ongoing training before working with clients.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details>
+            <summary>What areas do you serve?</summary>
+            <p>We currently serve the greater metropolitan area. Contact us to confirm availability in your ZIP code.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details>
+            <summary>Do you accept insurance or Medicaid?</summary>
+            <p>We work with most major insurance providers and accept Medicaid waiver programmes. Please call for a benefits verification.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /ag-content -->
+
+  <div id="ag-toast"></div>
+
+  <script>
+    'use strict';
+    // Tab navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Toast helper
+    function showToast(msg) {
+      const t = document.getElementById('ag-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // Schedule form
+    document.getElementById('schedule-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('s-name').value.trim();
+      if (!name) { showToast('⚠️ Please enter your name.'); return; }
+      showToast('✅ Appointment request sent for ' + name + '!');
+      e.target.reset();
+    });
+
+    // Support message
+    document.getElementById('support-send').addEventListener('click', () => {
+      const msg = document.getElementById('c-msg').value.trim();
+      if (!msg) { showToast('⚠️ Please type your message.'); return; }
+      showToast('✅ Message received! We\'ll respond within 24 hours.');
+      document.getElementById('c-name').value = '';
+      document.getElementById('c-email').value = '';
+      document.getElementById('c-msg').value = '';
+    });
+  </script>
+
+</body>
+</html>

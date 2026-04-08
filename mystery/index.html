@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Seven Stars – Diagnostic Tool</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="mystery-header">
+    <h1>⭐ THE SEVEN STARS ⭐</h1>
+    <p>CIPHER DECRYPTION MODULE — MATCH-3 DIAGNOSTIC PROTOCOL</p>
+  </header>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-item">
+      <div class="hud-label">Score</div>
+      <div class="hud-value" id="score-val">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Target</div>
+      <div class="hud-value" style="color:#888">1000</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Moves Left</div>
+      <div class="hud-value" id="moves-val">30</div>
+    </div>
+  </div>
+
+  <!-- Decryption progress bar -->
+  <div class="decrypt-bar-wrap">
+    <div class="decrypt-bar-label">Decryption Progress</div>
+    <div class="decrypt-bar-bg">
+      <div class="decrypt-bar-fill" id="bar-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Message area -->
+  <div class="msg-area" id="msg">Initialising cipher board…</div>
+
+  <!-- Board -->
+  <div class="board-wrap">
+    <div id="board" aria-label="Match-3 game board"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="btn-outline" id="btn-restart">↺ Reset Board</button>
+  </div>
+
+  <!-- Win / Narrative Overlay -->
+  <div id="win-overlay" role="dialog" aria-modal="true" aria-label="Cipher decrypted">
+
+    <div class="win-title">⭐ CIPHER DECRYPTED ⭐</div>
+
+    <div class="cipher-text">
+      <p style="color:#888;font-size:.78rem;letter-spacing:.1em;margin-bottom:1rem;">
+        ── DECRYPTED TRANSMISSION · CLASSIFICATION: EYES ONLY ──
+      </p>
+      <p>
+        After running all seven decryption layers against the intercepted
+        signal, the identity of the primary operative has been confirmed.
+      </p>
+      <br>
+      <p>
+        Cross-referencing cipher fragments <span class="reveal">Ω-3</span>,
+        <span class="reveal">Δ-5</span>, and <span class="reveal">Σ-7</span>
+        against the agent registry yields a definitive match.
+      </p>
+      <br>
+      <p>
+        The suspect is: <span class="redacted">MARCUS</span>
+      </p>
+      <br>
+      <p>
+        All seven stars have aligned. The cipher is broken.<br>
+        <span style="color:var(--muted);font-size:.82rem;">
+          Operative <span class="redacted">MARCUS</span> has been active
+          within the network since cycle 7. Cross-reference file #7-SEVEN
+          for full dossier.
+        </span>
+      </p>
+      <br>
+      <p style="color:#888;font-size:.78rem;letter-spacing:.08em;">
+        ── END OF TRANSMISSION ──
+      </p>
+    </div>
+
+    <button class="btn-gold" id="btn-restart2">↺ Play Again</button>
+
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>

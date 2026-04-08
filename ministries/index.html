@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice of Jesus Ministries</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold:    #ffd700;
+      --bg:      #0a0a0f;
+      --surface: rgba(255,255,255,0.05);
+      --border:  rgba(255,215,0,0.25);
+      --text:    #e8e8e8;
+      --muted:   #888;
+      --radius:  14px;
+      --blur:    blur(12px);
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      background-image:
+        radial-gradient(ellipse at 15% 15%, rgba(255,215,0,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(100,60,255,0.05) 0%, transparent 55%);
+    }
+
+    /* ── Header ── */
+    .voj-header {
+      background: rgba(255,215,0,0.05);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .voj-header .logo { font-size: 2.2rem; }
+    .voj-header h1 {
+      font-size: clamp(1.1rem, 4vw, 1.75rem);
+      color: var(--gold);
+      text-shadow: 0 0 14px rgba(255,215,0,0.35);
+    }
+    .voj-header p { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── Nav ── */
+    .voj-nav {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem 2rem 0;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: none;
+      border: 1px solid transparent;
+      border-radius: 8px 8px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      color: var(--gold);
+      border-color: var(--border);
+      background: rgba(255,215,0,0.07);
+    }
+
+    /* ── Content ── */
+    .voj-content { padding: 2rem; max-width: 960px; margin: 0 auto; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Glass card ── */
+    .glass {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .glass h2 {
+      font-size: 1.1rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    /* ── Video placeholder ── */
+    .video-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: rgba(255,215,0,0.04);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .video-placeholder:hover { background: rgba(255,215,0,0.08); }
+    .video-placeholder .play-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255,215,0,0.15);
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      transition: background 0.2s;
+    }
+    .video-placeholder:hover .play-btn { background: rgba(255,215,0,0.3); }
+    .video-placeholder span { font-size: 0.88rem; }
+
+    /* ── Sermon list ── */
+    .sermon-list { list-style: none; }
+    .sermon-list li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(255,215,0,0.08);
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 6px;
+    }
+    .sermon-list li:hover { background: rgba(255,215,0,0.05); padding-left: 0.5rem; }
+    .sermon-list li:last-child { border-bottom: none; }
+    .sermon-thumb {
+      width: 60px;
+      height: 42px;
+      border-radius: 6px;
+      background: rgba(255,215,0,0.1);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .sermon-info .s-title { font-size: 0.95rem; font-weight: 600; color: var(--text); }
+    .sermon-info .s-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── Resource library ── */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .resource-card {
+      background: rgba(255,215,0,0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+    .resource-card:hover { background: rgba(255,215,0,0.1); transform: translateY(-2px); }
+    .resource-card .rc-icon { font-size: 1.8rem; }
+    .resource-card .rc-title { font-size: 0.95rem; font-weight: 600; color: var(--gold); }
+    .resource-card .rc-type {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .resource-card .rc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+
+    /* ── Connect form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 0.55rem 0.8rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 90px; }
+
+    .btn-gold {
+      margin-top: 1rem;
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      padding: 0.65rem 1.6rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .btn-gold:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ── Toast ── */
+    #voj-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: rgba(255,215,0,0.15);
+      border: 1px solid var(--gold);
+      border-radius: 10px;
+      color: var(--gold);
+      padding: 0.6rem 1.4rem;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+      z-index: 999;
+    }
+    #voj-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="voj-header">
+    <div class="logo">🕊️</div>
+    <div>
+      <h1>Voice of Jesus Ministries</h1>
+      <p>Spreading Hope · Sharing the Word · Serving the Community</p>
+    </div>
+  </header>
+
+  <!-- Tabs -->
+  <nav class="voj-nav" aria-label="Sections">
+    <button class="tab-btn active" data-tab="featured">Featured</button>
+    <button class="tab-btn" data-tab="sermons">Sermons</button>
+    <button class="tab-btn" data-tab="resources">Resource Library</button>
+    <button class="tab-btn" data-tab="connect">Connect</button>
+  </nav>
+
+  <!-- Content -->
+  <div class="voj-content">
+
+    <!-- Featured Panel -->
+    <section class="tab-panel active" id="tab-featured">
+      <div class="glass">
+        <h2>🎬 Featured Message</h2>
+        <div class="video-placeholder" id="feat-video" role="button" tabindex="0" aria-label="Play featured video">
+          <div class="play-btn">▶</div>
+          <span>"Walking in Faith" – Pastor Emmanuel · Sunday Service</span>
+          <span style="font-size:.76rem;">Click to watch &nbsp;·&nbsp; 42 min</span>
+        </div>
+      </div>
+      <div class="glass">
+        <h2>✦ Latest Announcements</h2>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.9rem;">
+          <li style="display:flex;gap:.8rem;align-items:flex-start;">
+            <span style="font-size:1.3rem;">📢</span>
+            <div>
+              <div style="font-weight:600;color:var(--gold);font-size:.95rem;">Summer Revival 2025</div>
+              <div style="font-size:.82rem;color:var(--muted);">July 18–20 · Main Sanctuary · All are welcome. Register at the welcome desk.</div>
+            </div>
+          </li>
+          <li style="display:flex;gap:.8rem;align-items:flex-start;">
+            <span style="font-size:1.3rem;">🙏</span>
+            <div>
+              <div style="font-weight:600;color:var(--gold);font-size:.95rem;">Weekly Prayer Line</div>
+              <div style="font-size:.82rem;color:var(--muted);">Every Tuesday 7 pm EST &nbsp;·&nbsp; Dial: 1-800-JESUS-1 (535-871)</div>
+            </div>
+          </li>
+          <li style="display:flex;gap:.8rem;align-items:flex-start;">
+            <span style="font-size:1.3rem;">🌍</span>
+            <div>
+              <div style="font-weight:600;color:var(--gold);font-size:.95rem;">Mission Trip — Kenya</div>
+              <div style="font-size:.82rem;color:var(--muted);">September 5–15 · Applications due August 1st. See the Resources tab for the packet.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Sermons Panel -->
+    <section class="tab-panel" id="tab-sermons">
+      <div class="glass">
+        <h2>📺 Sermon Archive</h2>
+        <ul class="sermon-list" id="sermon-list">
+          <!-- populated by JS -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- Resources Panel -->
+    <section class="tab-panel" id="tab-resources">
+      <div class="glass">
+        <h2>📚 Resource Library</h2>
+        <div class="resource-grid" id="resource-grid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Connect Panel -->
+    <section class="tab-panel" id="tab-connect">
+      <div class="glass">
+        <h2>✉️ Get in Touch</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="cn-name">Name</label>
+            <input type="text" id="cn-name" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label for="cn-email">Email</label>
+            <input type="email" id="cn-email" placeholder="you@example.com">
+          </div>
+          <div class="form-group" style="grid-column:1/-1;">
+            <label for="cn-msg">Message / Prayer Request</label>
+            <textarea id="cn-msg" placeholder="Share a prayer request or question…"></textarea>
+          </div>
+        </div>
+        <button class="btn-gold" id="connect-send">Send Message</button>
+      </div>
+      <div class="glass">
+        <h2>📍 Find Us</h2>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:.8rem;">
+          <li style="display:flex;gap:.8rem;"><span style="font-size:1.2rem;">📍</span><span style="color:var(--muted);font-size:.9rem;">123 Glory Avenue, Faith City, FC 10001</span></li>
+          <li style="display:flex;gap:.8rem;"><span style="font-size:1.2rem;">📞</span><span style="color:var(--muted);font-size:.9rem;">+1 (800) VOICE-OF (864-2363)</span></li>
+          <li style="display:flex;gap:.8rem;"><span style="font-size:1.2rem;">✉️</span><span style="color:var(--muted);font-size:.9rem;">info@voiceofjesus.org</span></li>
+          <li style="display:flex;gap:.8rem;"><span style="font-size:1.2rem;">🕐</span><span style="color:var(--muted);font-size:.9rem;">Sunday Services: 8 am &amp; 11 am · Wed Bible Study: 7 pm</span></li>
+        </ul>
+      </div>
+    </section>
+
+  </div><!-- /voj-content -->
+
+  <div id="voj-toast"></div>
+
+  <script>
+    'use strict';
+
+    // Tab navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Toast
+    function showToast(msg) {
+      const t = document.getElementById('voj-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
+    // Featured video placeholder click
+    const featVideo = document.getElementById('feat-video');
+    featVideo.addEventListener('click', () => showToast('▶ Video stream coming soon — stay tuned!'));
+    featVideo.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') featVideo.click(); });
+
+    // Sermons data
+    const sermons = [
+      { title: 'Walking in Faith',       speaker: 'Pastor Emmanuel', date: 'Jun 29, 2025', dur: '42 min' },
+      { title: 'The Power of Prayer',    speaker: 'Elder Sarah',     date: 'Jun 22, 2025', dur: '38 min' },
+      { title: 'Renewing Your Mind',     speaker: 'Pastor Emmanuel', date: 'Jun 15, 2025', dur: '45 min' },
+      { title: 'Grace Upon Grace',       speaker: 'Deacon Marcus',   date: 'Jun 8, 2025',  dur: '33 min' },
+      { title: 'Standing on Promises',   speaker: 'Pastor Emmanuel', date: 'Jun 1, 2025',  dur: '50 min' },
+      { title: 'Overflow of Blessing',   speaker: 'Elder Sarah',     date: 'May 25, 2025', dur: '40 min' },
+    ];
+    const sermonList = document.getElementById('sermon-list');
+    sermons.forEach(s => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div class="sermon-thumb">▶</div>
+        <div class="sermon-info">
+          <div class="s-title">${s.title}</div>
+          <div class="s-meta">${s.speaker} &nbsp;·&nbsp; ${s.date} &nbsp;·&nbsp; ${s.dur}</div>
+        </div>`;
+      li.addEventListener('click', () => showToast('▶ Streaming: ' + s.title));
+      sermonList.appendChild(li);
+    });
+
+    // Resources data
+    const resources = [
+      { icon: '📖', title: 'Daily Devotional Guide',  type: 'PDF', desc: '30-day devotional covering Psalms and Proverbs.' },
+      { icon: '🎵', title: 'Worship Playlist 2025',   type: 'Audio', desc: 'Contemporary and traditional hymns for daily worship.' },
+      { icon: '🗺️', title: 'Mission Trip Packet',     type: 'PDF', desc: 'Everything you need to apply for the Kenya mission.' },
+      { icon: '📝', title: 'Bible Study Notes – John', type: 'PDF', desc: 'In-depth study notes for the Gospel of John.' },
+      { icon: '🎬', title: 'Revival 2024 Recordings', type: 'Video', desc: 'Full recordings from our 2024 Summer Revival.' },
+      { icon: '📊', title: 'Annual Ministry Report',  type: 'PDF', desc: 'Our 2024 impact report and financial transparency doc.' },
+    ];
+    const resourceGrid = document.getElementById('resource-grid');
+    resources.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'resource-card';
+      card.innerHTML = `
+        <div class="rc-icon">${r.icon}</div>
+        <div class="rc-title">${r.title}</div>
+        <div class="rc-type">${r.type}</div>
+        <div class="rc-desc">${r.desc}</div>`;
+      card.addEventListener('click', () => showToast('📥 Downloading: ' + r.title + ' (demo)'));
+      resourceGrid.appendChild(card);
+    });
+
+    // Connect form
+    document.getElementById('connect-send').addEventListener('click', () => {
+      const msg = document.getElementById('cn-msg').value.trim();
+      if (!msg) { showToast('⚠️ Please write a message or prayer request.'); return; }
+      showToast('✅ Message received! We will respond within 48 hours. God bless you!');
+      document.getElementById('cn-name').value = '';
+      document.getElementById('cn-email').value = '';
+      document.getElementById('cn-msg').value = '';
+    });
+  </script>
+
+</body>
+</html>
