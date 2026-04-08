@@ -1,0 +1,198 @@
+/* ============================================================
+   Portfolio Hub – Main Stylesheet
+   Design: Glassmorphic · Dark BG · #ffd700 Gold Accents
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --gold:        #ffd700;
+  --gold-dim:    #b89a00;
+  --bg:          #0a0a0f;
+  --surface:     rgba(255, 255, 255, 0.05);
+  --surface-hov: rgba(255, 215, 0, 0.08);
+  --border:      rgba(255, 215, 0, 0.25);
+  --text:        #e8e8e8;
+  --text-muted:  #888;
+  --radius:      16px;
+  --shadow:      0 8px 32px rgba(0, 0, 0, 0.5);
+  --blur:        blur(12px);
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(255, 140, 0, 0.04) 0%, transparent 50%);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ── Header ─────────────────────────────────────────────── */
+.hub-header {
+  text-align: center;
+  padding: 3rem 1rem 1.5rem;
+}
+
+.hub-header h1 {
+  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+}
+
+.hub-header p {
+  margin-top: 0.5rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ── Hub Grid ───────────────────────────────────────────── */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem 3rem;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: var(--blur);
+  -webkit-backdrop-filter: var(--blur);
+  box-shadow: var(--shadow);
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+  user-select: none;
+}
+
+.card:hover,
+.card:focus-visible {
+  background: var(--surface-hov);
+  box-shadow: 0 0 0 2px var(--gold), var(--shadow);
+  transform: translateY(-4px);
+  outline: none;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.card-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--gold);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.2rem 0.75rem;
+}
+
+.card-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Iframe Overlay ─────────────────────────────────────── */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  flex-direction: column;
+  animation: fadeIn 0.2s ease;
+}
+
+#overlay.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.overlay-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  background: rgba(10, 10, 15, 0.95);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.overlay-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.03em;
+}
+
+.overlay-close {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--gold);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.3rem 0.8rem;
+  transition: background 0.2s;
+}
+.overlay-close:hover { background: rgba(255, 215, 0, 0.12); }
+
+#app-frame {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: var(--bg);
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.hub-footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 215, 0, 0.1);
+}

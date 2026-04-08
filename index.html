@@ -1,572 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Nexus Arcade</title>
-    <meta name="description" content="Nexus Arcade – gamified learning platform for developers. Unlock nodes, earn XP, and level up your skills.">
-
-    <!-- Favicon -->
-    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="./favicon.svg">
-
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="./manifest.json">
-
-    <!-- Theme & mobile-app meta -->
-    <meta name="theme-color" content="#020202">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="NexusArcade">
-
-    <!-- Open Graph -->
-    <meta property="og:title" content="Nexus Arcade">
-    <meta property="og:description" content="Gamified learning platform for developers.">
-    <meta property="og:type" content="website">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-
-    <!-- Firebase Compat SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
-    <!-- React 18 -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-
-    <!-- Lucide React Icons (UMD) -->
-    <script src="https://unpkg.com/lucide-react@0.309.0/dist/umd/lucide-react.min.js"></script>
-
-    <style>
-        body { font-family: 'Inter', sans-serif; background: #020202; }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        @keyframes nexus-fade-in {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes nexus-zoom-in {
-            from { opacity: 0; transform: scale(0.96); }
-            to   { opacity: 1; transform: scale(1); }
-        }
-        @keyframes nexus-pulse {
-            0%, 100% { opacity: 0.4; transform: scale(0.92); }
-            50%       { opacity: 1;   transform: scale(1.08); }
-        }
-        .animate-in.fade-in  { animation: nexus-fade-in 0.3s ease-out both; }
-        .animate-in.zoom-in  { animation: nexus-zoom-in 0.3s ease-out both; }
-
-        /* Accessible focus ring */
-        button:focus-visible, a:focus-visible, input:focus-visible {
-            outline: 2px solid rgba(59,130,246,0.9);
-            outline-offset: 2px;
-            border-radius: 6px;
-        }
-
-        /* Loading splash */
-        #splash {
-            position: fixed; inset: 0; background: #020202;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 16px;
-            z-index: 9999; pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        #splash.hidden { opacity: 0; }
-        #splash svg { animation: nexus-pulse 1.4s ease-in-out infinite; }
-        #splash span {
-            color: #3b82f6; font-family: sans-serif; font-size: 9px;
-            font-weight: 900; letter-spacing: 0.4em; text-transform: uppercase;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Hub</title>
+  <meta name="description" content="Portfolio Hub – Amazing Grace Home Living, Voice of Jesus Ministries, The Seven Stars, Bible Journey.">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
 </head>
-<body class="overflow-hidden">
-    <!-- Loading splash – hidden once React mounts -->
-    <div id="splash" aria-hidden="true">
-        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24">
-            <defs>
-                <radialGradient id="sg" cx="50%" cy="50%" r="60%">
-                    <stop offset="0%" stop-color="#fbbf24"/>
-                    <stop offset="100%" stop-color="#3b82f6"/>
-                </radialGradient>
-            </defs>
-            <path fill="url(#sg)" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-        <span>Nexus Arcade</span>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────── -->
+  <header class="hub-header">
+    <h1>✦ Portfolio Hub</h1>
+    <p>Select a module to launch</p>
+  </header>
+
+  <!-- ── Card Grid ────────────────────────────────────── -->
+  <main class="hub-grid" role="main">
+
+    <div class="card" tabindex="0"
+         data-src="./home-living/index.html"
+         data-label="Amazing Grace Home Living"
+         aria-label="Open Amazing Grace Home Living module">
+      <div class="card-icon">🏡</div>
+      <div class="card-title">Amazing Grace</div>
+      <div class="card-tag">Business</div>
+      <p class="card-desc">Home Living services — scheduling, client support, and professional care.</p>
     </div>
-    <div id="root"></div>
 
-    <!-- App-level globals (replace with real Firebase config for production) -->
-    <script>
-        window.__firebase_config = JSON.stringify({
-            apiKey: "AIzaSyDemo-GamifiedLearning",
-            authDomain: "gamifiedlearning-demo.firebaseapp.com",
-            projectId: "gamifiedlearning-demo",
-            storageBucket: "gamifiedlearning-demo.appspot.com",
-            messagingSenderId: "000000000000",
-            appId: "1:000000000000:web:0000000000000000"
+    <div class="card" tabindex="0"
+         data-src="./ministries/index.html"
+         data-label="Voice of Jesus Ministries"
+         aria-label="Open Voice of Jesus Ministries module">
+      <div class="card-icon">🕊️</div>
+      <div class="card-title">Voice of Jesus</div>
+      <div class="card-tag">Non-Profit</div>
+      <p class="card-desc">Ministries media portal — sermons, videos, and resource library.</p>
+    </div>
+
+    <div class="card" tabindex="0"
+         data-src="./mystery/index.html"
+         data-label="The Seven Stars – Diagnostic Tool"
+         aria-label="Open The Seven Stars diagnostic game">
+      <div class="card-icon">⭐</div>
+      <div class="card-title">The Seven Stars</div>
+      <div class="card-tag">Diagnostic Tool</div>
+      <p class="card-desc">Decrypt the cipher with a Match-3 puzzle. Uncover the truth when you reach 1,000 pts.</p>
+    </div>
+
+    <div class="card" tabindex="0"
+         data-src="./bible/index.html"
+         data-label="Bible Journey – Educational App"
+         aria-label="Open Bible Journey educational app">
+      <div class="card-icon">📖</div>
+      <div class="card-title">Bible Journey</div>
+      <div class="card-tag">Education</div>
+      <p class="card-desc">Progress through Genesis, Exodus, and the Gospels with interactive quizzes.</p>
+    </div>
+
+  </main>
+
+  <!-- ── Iframe Overlay ───────────────────────────────── -->
+  <div id="overlay" role="dialog" aria-modal="true" aria-label="App viewer">
+    <div class="overlay-bar">
+      <span class="overlay-title" id="overlay-label">Loading…</span>
+      <button class="overlay-close" id="overlay-close" aria-label="Close app viewer">✕ Close</button>
+    </div>
+    <iframe id="app-frame" title="App viewer" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+  </div>
+
+  <!-- ── Footer ───────────────────────────────────────── -->
+  <footer class="hub-footer">
+    &copy; 2025 Portfolio Hub &mdash; Built with Vanilla JS &amp; CSS3
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const overlay = document.getElementById('overlay');
+      const frame   = document.getElementById('app-frame');
+      const label   = document.getElementById('overlay-label');
+      const btnClose = document.getElementById('overlay-close');
+
+      function openApp(src, appLabel) {
+        frame.src = src;
+        label.textContent = appLabel;
+        overlay.classList.add('active');
+        overlay.focus();
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeApp() {
+        overlay.classList.remove('active');
+        frame.src = '';
+        document.body.style.overflow = '';
+      }
+
+      // Card clicks / keyboard
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+          openApp(card.dataset.src, card.dataset.label);
         });
-        window.__app_id = 'nexus-v12-9';
-        window.__initial_auth_token = null;
-    </script>
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openApp(card.dataset.src, card.dataset.label);
+          }
+        });
+      });
 
-    <script>
-        // ─── React hooks ──────────────────────────────────────────────────────────
-        const { useState, useEffect, useRef } = React;
-        const e = React.createElement;
+      // Close button
+      btnClose.addEventListener('click', closeApp);
 
-        // ─── Lucide icons ─────────────────────────────────────────────────────────
-        const {
-            MapPin, Zap, Rocket, Star, Unlock,
-            BatteryFull, AlertTriangle, CheckCircle2, Download,
-            Layout, Code2, FileText, User, TerminalSquare,
-            Map: MapIcon, Terminal: TermIcon
-        } = LucideReact;
+      // Escape key
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && overlay.classList.contains('active')) closeApp();
+      });
 
-        // ─── Firebase (compat) ────────────────────────────────────────────────────
-        let firebaseApp, auth, db;
-        try {
-            const firebaseConfig = JSON.parse(window.__firebase_config);
-            firebaseApp = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth(firebaseApp);
-            db   = firebase.firestore(firebaseApp);
-        } catch (err) {
-            console.warn('Firebase init skipped:', err.message);
-        }
+      // Click outside iframe bar
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) closeApp();
+      });
+    }());
+  </script>
 
-        // ─── SovereignStar ────────────────────────────────────────────────────────
-        const SovereignStar = ({ size = 24, color = "#fbbf24", glow = true, className = "" }) => {
-            const filter = glow ? `drop-shadow(0 0 10px ${color}80)` : 'none';
-            return e('svg', { width: size, height: size, viewBox: "0 0 24 24", fill: color, style: { filter }, className },
-                e('path', { d: "M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" })
-            );
-        };
-
-        // ─── NavBtn ───────────────────────────────────────────────────────────────
-        const NavBtn = ({ active, icon: Icon, label, onClick }) =>
-            e('button', {
-                onClick,
-                className: `flex flex-col items-center gap-1 px-4 py-2 transition-all rounded-2xl ${active ? 'text-white' : 'text-slate-600'}`
-            },
-                e(Icon, { size: 20, className: active ? 'text-blue-400' : '' }),
-                e('span', { className: "text-[7px] font-black uppercase tracking-widest" }, label)
-            );
-
-        // ─── App ──────────────────────────────────────────────────────────────────
-        const App = () => {
-            const [view,            setView]            = useState('overworld');
-            const [user,            setUser]            = useState(null);
-            const [points,          setPoints]          = useState(7200);
-            const [battery,         setBattery]         = useState(null);
-            const [unlockedNodes,   setUnlockedNodes]   = useState(['tpa_node', 'matrix_node']);
-            const [certificates,    setCertificates]    = useState([]);
-            const [terminalHistory, setTerminalHistory] = useState([
-                '[ARCADE OS] Terminal initialized.',
-                'Type "help" for commands.'
-            ]);
-            const [termInput,       setTermInput]       = useState('');
-            const [installPrompt,   setInstallPrompt]   = useState(null);
-
-            const terminalRef = useRef(null);
-            const identity    = "GUARDIAN_82";
-
-            // ── Arcade node map ──────────────────────────────────────────────────
-            const arcadeNodes = [
-                { id: 'tpa_node',     name: 'Tampa HQ',     x: '20%', y: '40%', type: 'hub',     icon: MapPin  },
-                { id: 'matrix_node',  name: 'Matrix Match', x: '45%', y: '30%', type: 'game',    icon: Zap     },
-                { id: 'neon_node',    name: 'Neon Leap',    x: '70%', y: '50%', type: 'game',    icon: Rocket  },
-                { id: 'mystery_node', name: 'Seven Stars',  x: '50%', y: '75%', type: 'mystery', icon: Star    },
-                { id: 'future_node',  name: 'Locked Shard', x: '80%', y: '20%', type: 'locked',  icon: Unlock  }
-            ];
-
-            // ── Firebase auth ────────────────────────────────────────────────────
-            useEffect(() => {
-                if (!auth) return;
-                const initAuth = async () => {
-                    try {
-                        if (window.__initial_auth_token) {
-                            await auth.signInWithCustomToken(window.__initial_auth_token);
-                        } else {
-                            await auth.signInAnonymously();
-                        }
-                    } catch (err) {
-                        console.warn('Auth:', err.message);
-                    }
-                };
-                initAuth();
-                const unsub = auth.onAuthStateChanged(setUser);
-                return () => unsub();
-            }, []);
-
-            // ── Battery API (progressive enhancement – deprecated in some browsers) ──
-            useEffect(() => {
-                if (!navigator.getBattery) return;
-                navigator.getBattery().then(bat => {
-                    const update = () => setBattery(Math.round(bat.level * 100));
-                    update();
-                    bat.addEventListener('levelchange', update);
-                    return () => bat.removeEventListener('levelchange', update);
-                });
-            }, []);
-
-            // ── PWA install prompt ───────────────────────────────────────────────
-            useEffect(() => {
-                const handler = (e) => { e.preventDefault(); setInstallPrompt(e); };
-                window.addEventListener('beforeinstallprompt', handler);
-                return () => window.removeEventListener('beforeinstallprompt', handler);
-            }, []);
-
-            // ── Hide loading splash once React has mounted ───────────────────────
-            useEffect(() => {
-                const splash = document.getElementById('splash');
-                if (splash) {
-                    splash.classList.add('hidden');
-                    setTimeout(() => { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 450);
-                }
-            }, []);
-
-            // ── Auto-scroll terminal ─────────────────────────────────────────────
-            useEffect(() => {
-                if (terminalRef.current) {
-                    terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-                }
-            }, [terminalHistory]);
-
-            // ── Terminal helpers ─────────────────────────────────────────────────
-            const logTerm = (msg) => setTerminalHistory(prev => [...prev, `> ${msg}`]);
-
-            const runCommand = (cmd) => {
-                const clean = cmd.toLowerCase().trim();
-                if (!clean) return;
-                logTerm(clean);
-                switch (clean) {
-                    case 'help':
-                        logTerm("Commands: stats, map, unlock, clear, bio, whoami");
-                        break;
-                    case 'stats':
-                        logTerm(`Points: ${points} | Nodes: ${unlockedNodes.length} | Battery: ${battery !== null ? battery + '%' : 'N/A'}`);
-                        break;
-                    case 'map':
-                        setView('overworld');
-                        logTerm("Switching to Overworld view...");
-                        break;
-                    case 'clear':
-                        setTerminalHistory(['[ARCADE OS] Terminal Reset.']);
-                        break;
-                    case 'whoami':
-                        logTerm("Guardian 82 // Efficiency Architect // Stellara Candidate");
-                        break;
-                    case 'bio':
-                        logTerm("Managing technical debt through Stellara-inspired automation.");
-                        break;
-                    case 'unlock':
-                        unlockFeature('neon_node');
-                        break;
-                    default:
-                        logTerm(`Command not recognized: ${clean}`);
-                }
-                setTermInput('');
-            };
-
-            const unlockFeature = (id) => {
-                if (!unlockedNodes.includes(id)) {
-                    setUnlockedNodes(prev => [...prev, id]);
-                    setCertificates(prev => [...prev, `Cert_${id.toUpperCase()}`]);
-                    setPoints(prev => prev + 500);
-                    logTerm(`SECURITY ALERT: Node ${id} successfully unlocked.`);
-                }
-            };
-
-            const handleInstall = () => {
-                if (!installPrompt) return;
-                installPrompt.prompt();
-                installPrompt.userChoice.then(() => setInstallPrompt(null));
-            };
-
-            // ── View: Overworld Map ──────────────────────────────────────────────
-            const OverworldMap = () =>
-                e('div', { className: "flex-1 relative bg-slate-950 overflow-hidden flex flex-col items-center justify-center p-4" },
-                    e('div', {
-                        className: "absolute inset-0 opacity-10 pointer-events-none",
-                        style: { backgroundImage: 'radial-gradient(#3b82f6 1px, transparent 1px)', backgroundSize: '40px 40px' }
-                    }),
-                    e('div', { className: "relative w-full max-w-lg aspect-square bg-blue-900/5 border border-blue-500/20 rounded-[4rem] shadow-[0_0_100px_rgba(30,58,138,0.3)]" },
-                        e('h2', { className: "absolute top-8 left-0 right-0 text-center text-blue-400 font-black uppercase text-xs tracking-[0.5em]" },
-                            "Stellara_Matrix_Map"
-                        ),
-                        ...arcadeNodes.map(node => {
-                            const isUnlocked = unlockedNodes.includes(node.id) || node.type === 'hub';
-                            const NodeIcon   = node.icon;
-                            const handleClick = () => {
-                                if (!isUnlocked) { logTerm("Node is encrypted."); return; }
-                                if (node.type === 'hub')         setView('workspace');
-                                else if (node.type === 'mystery') setView('downloads');
-                                else                              setView('terminal');
-                            };
-                            return e('div', {
-                                key: node.id,
-                                className: "absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-700 cursor-pointer",
-                                style: { left: node.x, top: node.y },
-                                onClick: handleClick
-                            },
-                                e('div', { className: "relative flex flex-col items-center group" },
-                                    e('div', { className: `w-12 h-12 rounded-2xl flex items-center justify-center border-2 transition-all ${isUnlocked ? 'bg-black border-blue-500 shadow-[0_0_20px_#3b82f640] scale-110' : 'bg-slate-900 border-white/5 opacity-40 scale-90 grayscale'}` },
-                                        node.id === 'mystery_node'
-                                            ? e(SovereignStar, { size: 24, color: isUnlocked ? "#fbbf24" : "#475569" })
-                                            : e(NodeIcon, { size: 22, className: isUnlocked ? "text-blue-400" : "text-slate-600" })
-                                    ),
-                                    e('span', { className: `mt-2 text-[8px] font-black uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded bg-black/80 border border-white/5 ${isUnlocked ? 'text-white' : 'text-slate-700'}` },
-                                        node.name
-                                    ),
-                                    isUnlocked && e('div', { className: "absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full animate-ping pointer-events-none" })
-                                )
-                            );
-                        })
-                    ),
-                    e('div', { className: "mt-8 flex gap-4 overflow-x-auto w-full px-4 no-scrollbar" },
-                        e('div', { className: "flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2" },
-                            e('span', { className: "text-[8px] text-slate-500 uppercase font-black tracking-widest" }, "Active_Telemetry"),
-                            e('div', { className: "flex justify-between items-end" },
-                                e('span', { className: "text-xl font-black text-white" }, points),
-                                e('span', { className: "text-[9px] text-emerald-500 font-bold mb-1" }, "XP")
-                            )
-                        ),
-                        e('div', { className: "flex-shrink-0 w-40 glass p-4 rounded-3xl border border-white/5 space-y-2" },
-                            e('span', { className: "text-[8px] text-slate-500 uppercase font-black tracking-widest" }, "Mystery_Progress"),
-                            e('div', { className: "flex justify-between items-end" },
-                                e('span', { className: "text-xl font-black text-white" }, `${Math.round((unlockedNodes.length / arcadeNodes.length) * 100)}%`),
-                                e('span', { className: "text-[9px] text-blue-500 font-bold mb-1" }, "SYNC")
-                            )
-                        )
-                    )
-                );
-
-            // ── View: Arcade Terminal ────────────────────────────────────────────
-            const ArcadeTerminal = () =>
-                e('div', { className: "flex-1 flex flex-col p-4 md:p-8 space-y-4 animate-in fade-in pb-32" },
-                    e('div', { className: "flex items-center gap-3 mb-2" },
-                        e(TerminalSquare, { size: 20, className: "text-emerald-500" }),
-                        e('h2', { className: "text-white font-black uppercase text-sm tracking-[0.2em]" }, "Arcade_Terminal_v1.0")
-                    ),
-                    e('div', { className: "flex-1 bg-black/80 rounded-[2.5rem] border border-white/10 p-6 font-mono text-[11px] flex flex-col shadow-2xl backdrop-blur-xl" },
-                        e('div', { ref: terminalRef, className: "flex-1 overflow-y-auto custom-scroll space-y-1 mb-4 pr-2" },
-                            ...terminalHistory.map((line, i) =>
-                                e('div', { key: i, className: line.startsWith('>') ? 'text-blue-400' : 'text-emerald-500/80 italic' }, line)
-                            )
-                        ),
-                        e('div', { className: "flex items-center gap-3 border-t border-white/10 pt-4" },
-                            e('span', { className: "text-blue-500 font-black uppercase" }, "Guardian@Nexus:~$"),
-                            e('input', {
-                                autoFocus: true,
-                                value: termInput,
-                                onChange: (ev) => setTermInput(ev.target.value),
-                                onKeyDown: (ev) => ev.key === 'Enter' && runCommand(termInput),
-                                className: "flex-1 bg-transparent border-none outline-none text-white font-mono",
-                                placeholder: "..."
-                            })
-                        )
-                    ),
-                    e('div', { className: "grid grid-cols-2 gap-4" },
-                        e('button', {
-                            onClick: () => runCommand('stats'),
-                            className: "p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        }, "Run_Stats"),
-                        e('button', {
-                            onClick: () => runCommand('map'),
-                            className: "p-4 bg-white/5 rounded-2xl text-[9px] font-black uppercase border border-white/5 text-slate-400 active:bg-blue-600 active:text-black"
-                        }, "Open_Map")
-                    )
-                );
-
-            // ── View: Downloads / Vault ──────────────────────────────────────────
-            const DownloadsView = () =>
-                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32" },
-                    e('h2', { className: "text-4xl font-black text-white uppercase tracking-tighter mb-12" }, "Vault_Downloads"),
-                    e('div', { className: "grid grid-cols-1 gap-6" },
-                        certificates.length > 0
-                            ? certificates.map((cert, i) =>
-                                e('div', { key: i, className: "p-8 bg-slate-900/40 rounded-[2.5rem] border border-emerald-500/20 flex items-center justify-between group" },
-                                    e('div', { className: "flex items-center gap-6" },
-                                        e('div', { className: "w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center border border-emerald-500/20" },
-                                            e(CheckCircle2, { size: 28, className: "text-emerald-500" })
-                                        ),
-                                        e('div', null,
-                                            e('h4', { className: "text-xl font-black text-white uppercase" }, cert),
-                                            e('p', { className: "text-[9px] text-slate-500 font-bold uppercase tracking-widest" }, "Sovereign Proficiency Shard")
-                                        )
-                                    ),
-                                    e('button', { className: "w-12 h-12 bg-emerald-600 text-black rounded-xl flex items-center justify-center active:scale-90 transition-all" },
-                                        e(Download, { size: 20 })
-                                    )
-                                )
-                            )
-                            : e('div', { className: "text-center p-20 glass rounded-[3rem] border border-dashed border-white/10" },
-                                e(AlertTriangle, { size: 48, className: "text-slate-800 mx-auto mb-6" }),
-                                e('p', { className: "text-xs text-slate-600 uppercase font-black tracking-widest" }, "No Certificates Unlocked"),
-                                e('button', {
-                                    onClick: () => unlockFeature('mystery_node'),
-                                    className: "mt-6 text-[10px] text-blue-500 font-black uppercase hover:underline"
-                                }, "Force_Sync_Certificates?")
-                            )
-                    )
-                );
-
-            // ── View: Profile ────────────────────────────────────────────────────
-            const ProfileView = () =>
-                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in zoom-in pb-32" },
-                    e('div', { className: "max-w-xl mx-auto space-y-10" },
-                        e('div', { className: "flex flex-col items-center space-y-6" },
-                            e('div', { className: "w-36 h-36 bg-slate-950 rounded-[3rem] flex items-center justify-center border-2 border-amber-500/30 shadow-[0_0_60px_#fbbf2415]" },
-                                e(SovereignStar, { size: 72 })
-                            ),
-                            e('div', { className: "text-center space-y-2" },
-                                e('h2', { className: "text-5xl font-black text-white uppercase tracking-tighter leading-none" }, identity),
-                                e('span', { className: "text-[10px] text-amber-500 font-black uppercase tracking-[0.4em]" }, "Sovereign Nucleus")
-                            )
-                        ),
-                        e('div', { className: "bg-slate-900/40 p-10 rounded-[3rem] border border-white/5 space-y-8 shadow-2xl" },
-                            e('div', { className: "space-y-4" },
-                                e('span', { className: "text-[8px] text-slate-600 font-black uppercase tracking-widest" }, "Efficiency Architect Shard"),
-                                e('p', { className: "text-xs text-slate-300 italic leading-relaxed font-bold" }, "Collaborative Infrastructure Re-engineering."),
-                                e('p', { className: "text-[11px] text-slate-500 leading-relaxed italic" }, "Managing technical debt through Stellara-inspired automation. Championing mobile-first usability for field nodes.")
-                            ),
-                            e('div', { className: "grid grid-cols-2 gap-4" },
-                                e('div', { className: "p-5 bg-black/40 rounded-3xl border border-white/5 text-center" },
-                                    e('span', { className: "text-[8px] text-slate-600 font-black uppercase block mb-1" }, "Local Node"),
-                                    e('span', { className: "text-[10px] text-white font-bold uppercase" }, "Tampa / B10")
-                                ),
-                                e('div', { className: "p-5 bg-black/40 rounded-3xl border border-white/5 text-center" },
-                                    e('span', { className: "text-[8px] text-slate-600 font-black uppercase block mb-1" }, "Arcade Rank"),
-                                    e('span', { className: "text-[10px] text-white font-bold uppercase" }, "S-Class")
-                                )
-                            )
-                        )
-                    )
-                );
-
-            // ── View: Workspace / DevOps Studio ─────────────────────────────────
-            const WorkspaceView = () =>
-                e('div', { className: "flex-1 p-8 overflow-y-auto custom-scroll animate-in fade-in pb-32" },
-                    e('h2', { className: "text-3xl font-black text-white uppercase mb-8" }, "DevOps_Studio"),
-                    e('div', { className: "grid grid-cols-1 md:grid-cols-2 gap-6" },
-                        e('div', { className: "bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6 shadow-2xl" },
-                            e('div', { className: "flex items-center gap-3" },
-                                e(Layout, { size: 18, className: "text-amber-500" }),
-                                e('span', { className: "text-[10px] font-black uppercase tracking-[0.3em] text-white" }, "Handshake_Tools")
-                            ),
-                            e('div', { className: "grid grid-cols-2 gap-3" },
-                                e('a', {
-                                    href: "https://script.google.com/",
-                                    target: "_blank",
-                                    rel: "noopener noreferrer",
-                                    className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
-                                },
-                                    e(Code2, { size: 16, className: "text-slate-400" }),
-                                    e('span', { className: "text-[9px] font-black text-white uppercase" }, "Apps Script")
-                                ),
-                                e('a', {
-                                    href: "https://sites.google.com/",
-                                    target: "_blank",
-                                    rel: "noopener noreferrer",
-                                    className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-center gap-3 transition-all"
-                                },
-                                    e(Layout, { size: 16, className: "text-slate-400" }),
-                                    e('span', { className: "text-[9px] font-black text-white uppercase" }, "Google Sites")
-                                )
-                            )
-                        ),
-                        e('div', { className: "bg-slate-900/40 p-8 rounded-[3rem] border border-white/5 space-y-6" },
-                            e('div', { className: "flex items-center gap-3" },
-                                e(FileText, { size: 18, className: "text-blue-500" }),
-                                e('span', { className: "text-[10px] font-black uppercase tracking-[0.3em] text-white" }, "Resources")
-                            ),
-                            e('a', {
-                                href: "https://docs.google.com/document/d/1Md7lJvMgfmIgyqhg_uIc792TLI98rWkWDIRnqFm0vJk/edit",
-                                target: "_blank",
-                                rel: "noopener noreferrer",
-                                className: "p-4 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 flex items-start gap-3 transition-all"
-                            },
-                                e(FileText, { size: 16, className: "text-slate-400 mt-0.5 flex-shrink-0" }),
-                                e('div', null,
-                                    e('p', { className: "text-[9px] font-black text-white uppercase" }, "Master_Resume.md"),
-                                    e('p', { className: "text-[8px] text-slate-500 mt-1" }, "Team-based efficiency calibrated.")
-                                )
-                            )
-                        )
-                    )
-                );
-
-            // ── Root render ──────────────────────────────────────────────────────
-            return e('div', { className: "fixed inset-0 bg-[#020202] text-slate-400 flex flex-col selection:bg-blue-500/30 overflow-hidden font-sans" },
-
-                /* HUD HEADER */
-                e('nav', { className: "h-14 border-b border-white/5 bg-black/95 flex items-center justify-between px-6 z-[80] backdrop-blur-2xl flex-shrink-0" },
-                    e('div', { className: "flex items-center gap-3 cursor-pointer", onClick: () => setView('overworld') },
-                        e(SovereignStar, { size: 22 }),
-                        e('h1', { className: "text-white font-black text-[10px] uppercase tracking-[0.2em]" }, "Nexus_Arcade")
-                    ),
-                    e('div', { className: "flex items-center gap-3" },
-                        installPrompt && e('button', {
-                            onClick: handleInstall,
-                            className: "bg-blue-600 hover:bg-blue-500 active:scale-95 text-white px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest transition-all"
-                        }, "Install App"),
-                        e('div', { className: "bg-white/5 px-3 py-1 rounded-full border border-white/10 flex items-center gap-2" },
-                            e(BatteryFull, { size: 12, className: "text-emerald-500" }),
-                            e('span', { className: "text-[10px] font-black text-white font-mono" }, `${battery !== null ? battery : '--'}%`)
-                        )
-                    )
-                ),
-
-                /* VIEWPORT */
-                e('main', { className: "flex-1 relative flex overflow-hidden w-full" },
-                    view === 'overworld'                       && e(OverworldMap),
-                    (view === 'terminal' || view === 'arcade') && e(ArcadeTerminal),
-                    view === 'downloads'                       && e(DownloadsView),
-                    view === 'profile'                         && e(ProfileView),
-                    view === 'workspace'                       && e(WorkspaceView)
-                ),
-
-                /* NAVIGATION DOCK (Thumb-Safe) */
-                e('div', { className: "h-20 border-t border-white/5 bg-black/95 flex items-center justify-around px-4 z-[80] backdrop-blur-2xl flex-shrink-0" },
-                    e(NavBtn, { active: view === 'overworld',                      icon: MapIcon,  label: "Map",      onClick: () => setView('overworld') }),
-                    e(NavBtn, { active: view === 'terminal' || view === 'arcade',  icon: TermIcon, label: "Terminal", onClick: () => setView('terminal')  }),
-                    e(NavBtn, { active: view === 'downloads',                      icon: Download, label: "Vault",    onClick: () => setView('downloads') }),
-                    e(NavBtn, { active: view === 'profile',                        icon: User,     label: "Profile",  onClick: () => setView('profile')   })
-                )
-            );
-        };
-
-        // ─── Mount ────────────────────────────────────────────────────────────────
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
-    </script>
-
-    <!-- Service Worker registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .catch(err => console.warn('SW registration failed:', err));
-            });
-        }
-    </script>
 </body>
 </html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Journey – Scriptural Quiz</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="bj-header">
+    <h1>📖 Bible Journey</h1>
+    <p>A Scriptural Progress Quest through Genesis, Exodus &amp; the Gospels</p>
+  </header>
+
+  <!-- Journey navigation steps -->
+  <nav class="journey-nav" aria-label="Journey steps">
+    <div class="journey-step" id="step-genesis">
+      <div class="js-icon">🌱</div>
+      <div class="js-label">Genesis</div>
+      <div class="js-status">In Progress</div>
+    </div>
+    <div class="journey-step" id="step-exodus">
+      <div class="js-icon">🔥</div>
+      <div class="js-label">Exodus</div>
+      <div class="js-status">Locked</div>
+    </div>
+    <div class="journey-step" id="step-gospels">
+      <div class="js-icon">✝️</div>
+      <div class="js-label">Gospels</div>
+      <div class="js-status">Locked</div>
+    </div>
+  </nav>
+
+  <!-- Overall progress bar -->
+  <div class="bj-bar-wrap">
+    <div class="bj-bar-labels">
+      <span>Progress</span>
+      <span id="bar-label">0 / 15 questions</span>
+    </div>
+    <div class="bj-bar-bg">
+      <div class="bj-bar-fill" id="bar-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Quiz area -->
+  <div class="quiz-wrap" id="quiz-wrap">
+
+    <!-- Active question card -->
+    <div class="glass" id="glass-card">
+      <div class="q-book"  id="q-book">📖 Genesis</div>
+      <div class="q-number" id="q-number">Question 1 of 5</div>
+      <div class="q-text"  id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="verse-hint" id="verse-hint"></div>
+      <div class="q-controls">
+        <button class="btn-gold" id="btn-next">Next Question →</button>
+      </div>
+    </div>
+
+    <!-- Book complete screen -->
+    <div class="book-complete" id="book-complete">
+      <div class="bc-icon">🎉</div>
+      <h2 id="bc-title">Book Complete!</h2>
+      <div class="score-badge" id="bc-score"></div>
+      <p>Keep going on your scriptural journey!</p>
+      <div style="margin-top:1.4rem;">
+        <button class="btn-gold show" id="btn-next-book">Next Book →</button>
+      </div>
+    </div>
+
+    <!-- All done screen -->
+    <div class="all-done" id="all-done">
+      <div class="ad-icon">🏆</div>
+      <h2>Journey Complete!</h2>
+      <p>
+        You have walked through Genesis, Exodus, and the Gospels.<br>
+        <strong style="color:var(--gold);">Final Score: <span id="ad-score">0 / 0</span></strong>
+      </p>
+      <p style="margin-top:1rem;">"Your word is a lamp for my feet, a light on my path." — Psalm 119:105</p>
+      <div style="margin-top:1.8rem;">
+        <button class="btn-gold show" id="btn-restart">↺ Restart Journey</button>
+      </div>
+    </div>
+
+  </div><!-- /quiz-wrap -->
+
+  <script src="./script.js"></script>
+</body>
+</html>
