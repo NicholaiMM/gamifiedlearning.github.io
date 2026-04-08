@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DNS Universe – Networking Quiz</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="du-header">
+    <h1>🌐 DNS Universe</h1>
+    <p>A Gamified Quest through DNS Basics, Configuration &amp; Troubleshooting</p>
+  </header>
+
+  <!-- Zone navigation -->
+  <nav class="zone-nav" aria-label="Zone steps">
+    <div class="zone-step" id="step-basics">
+      <div class="zs-icon">📡</div>
+      <div class="zs-label">DNS Basics</div>
+      <div class="zs-status">In Progress</div>
+    </div>
+    <div class="zone-step" id="step-config">
+      <div class="zs-icon">⚙️</div>
+      <div class="zs-label">Configuration</div>
+      <div class="zs-status">Locked</div>
+    </div>
+    <div class="zone-step" id="step-troubleshoot">
+      <div class="zs-icon">🔧</div>
+      <div class="zs-label">Troubleshooting</div>
+      <div class="zs-status">Locked</div>
+    </div>
+  </nav>
+
+  <!-- Overall progress bar -->
+  <div class="du-bar-wrap">
+    <div class="du-bar-labels">
+      <span>Progress</span>
+      <span id="bar-label">0 / 15 questions</span>
+    </div>
+    <div class="du-bar-bg">
+      <div class="du-bar-fill" id="bar-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- Quiz area -->
+  <div class="quiz-wrap" id="quiz-wrap">
+
+    <!-- Active question card -->
+    <div class="glass" id="glass-card">
+      <div class="q-zone"   id="q-zone">📡 DNS Basics</div>
+      <div class="q-number" id="q-number">Question 1 of 5</div>
+      <div class="q-text"   id="q-text"></div>
+      <div class="options"  id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="fact-hint" id="fact-hint"></div>
+      <div class="q-controls">
+        <button class="btn-gold" id="btn-next">Next Question →</button>
+      </div>
+    </div>
+
+    <!-- Zone complete screen -->
+    <div class="zone-complete" id="zone-complete">
+      <div class="zc-icon">🎉</div>
+      <h2 id="zc-title">Zone Complete!</h2>
+      <div class="score-badge" id="zc-score"></div>
+      <p>Keep exploring the DNS Universe!</p>
+      <div style="margin-top:1.4rem;">
+        <button class="btn-gold show" id="btn-next-zone">Next Zone →</button>
+      </div>
+    </div>
+
+    <!-- All done screen -->
+    <div class="all-done" id="all-done">
+      <div class="ad-icon">🏆</div>
+      <h2>DNS Universe Complete!</h2>
+      <p>
+        You have mastered Basics, Configuration, and Troubleshooting.<br>
+        <strong style="color:var(--gold);">Final Score: <span id="ad-score">0 / 0</span></strong>
+      </p>
+      <p style="margin-top:1rem;">"The internet is just a series of well-organized name lookups." — DNS lore</p>
+      <div style="margin-top:1.8rem;">
+        <button class="btn-gold show" id="btn-restart">↺ Restart Journey</button>
+      </div>
+    </div>
+
+  </div><!-- /quiz-wrap -->
+
+  <script src="./script.js"></script>
+</body>
+</html>
